@@ -29,5 +29,4 @@ public class SwaggerConfiguration {
                         .description("Сервис для авторизации и аудентификации")
                         .termsOfService("http://swagger.io/terms/"));
     }
-
 }
