@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: duman.sabyrbayev
+      sqlFile:
+        path: db/changelog/sql_scripts/00000000000000_initial.sql
