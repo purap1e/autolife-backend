@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "Auth-service",
-                description = "Сервис для авторизации и аудентификации",
+                description = "Сервис для авторизации и аутентификации",
                 version = "1.0",
                 license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0.html")
         )
@@ -26,7 +26,7 @@ public class SwaggerConfiguration {
                 .info(new io.swagger.v3.oas.models.info.Info()
                         .title("Auth-service")
                         .version("1.0")
-                        .description("Сервис для авторизации и аудентификации")
+                        .description("Сервис для авторизации и аутентификации")
                         .termsOfService("http://swagger.io/terms/"));
     }
 }
