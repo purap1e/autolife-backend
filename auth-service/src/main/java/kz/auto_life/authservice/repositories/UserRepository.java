@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUin(String uin);
+    User findByUinAndDeleted(String uin, Boolean deleted);
 }

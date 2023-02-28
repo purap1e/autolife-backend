@@ -2,9 +2,6 @@ package kz.auto_life.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +14,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseEntity {
-
+    
     @Column(name = "uin", unique = true)
     private String uin;
 
@@ -27,6 +24,9 @@ public class User extends BaseEntity {
 
     @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "mid_name")
+    private String midName;
 
     @Column(name = "last_name")
     private String lastName;

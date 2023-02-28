@@ -3,8 +3,8 @@ package kz.auto_life.authservice.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.auto_life.authservice.entities.UserRegisterRequest;
-import kz.auto_life.authservice.entities.UserRegisterResponse;
+import kz.auto_life.authservice.payload.UserRegisterRequest;
+import kz.auto_life.authservice.payload.UserRegisterResponse;
 import kz.auto_life.authservice.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +26,6 @@ public class AuthController {
     @ApiResponse(responseCode = "201", description = "OK")
     @PostMapping("/registration")
     public ResponseEntity<UserRegisterResponse> registerNewUser(@RequestBody UserRegisterRequest request) {
-        userService.register(request);
-        UserRegisterResponse userRegisterResponse = UserRegisterResponse.builder()
-                .uin(request.getUin())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .phone(request.getPhone()).build();
-        return ResponseEntity.status(201).body(userRegisterResponse);
+        return ResponseEntity.status(201).body(UserRegisterRequest.from(userService.register(request)));
     }
 }

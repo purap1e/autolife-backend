@@ -1,6 +1,6 @@
 package kz.auto_life.authservice.services.impls;
 
-import kz.auto_life.authservice.entities.UserRegisterRequest;
+import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.exceptions.UinExistsException;
 import kz.auto_life.authservice.repositories.UserRepository;
 import kz.auto_life.authservice.services.UserService;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     private boolean uinExist(String uin) {
-        return userRepository.findByUin(uin) != null;
+        return userRepository.findByUinAndDeleted(uin, false) != null;
     }
 
     @Override
@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             User user = new User();
             user.setUin(request.getUin());
             user.setFirstName(request.getFirstName());
+            user.setMidName(request.getMidName());
             user.setLastName(request.getLastName());
             user.setPhone(request.getPhone());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String uin) throws UsernameNotFoundException {
-        User user = userRepository.findByUin(uin);
+        User user = userRepository.findByUinAndDeleted(uin, false);
         if (user == null) {
             log.info("This uin: {} does not exist", uin);
             throw new UsernameNotFoundException("User not found in the database");
