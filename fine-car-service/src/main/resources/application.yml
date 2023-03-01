@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 12584
 
 # id приложения
 spring:
@@ -10,7 +10,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:12561/eureka
   instance:
     instance-id: ${spring.application.name}:${random.value}
 

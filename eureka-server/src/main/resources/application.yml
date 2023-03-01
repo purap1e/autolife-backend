@@ -1,10 +1,10 @@
 server:
-  port: 8761
+  port: 12561
 
 # id приложения
 spring:
   application:
-    name: registry-serve
+    name: eureka-server
 
 # url для регистрации микросервисов
 eureka:
@@ -12,7 +12,7 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:12561/eureka
 
 logging:
   level:

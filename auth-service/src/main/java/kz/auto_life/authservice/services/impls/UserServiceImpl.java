@@ -1,10 +1,10 @@
 package kz.auto_life.authservice.services.impls;
 
-import kz.auto_life.authservice.payload.UserRegisterRequest;
+import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.exceptions.UinExistsException;
+import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.repositories.UserRepository;
 import kz.auto_life.authservice.services.UserService;
-import kz.auto_life.models.entities.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     private boolean uinExist(String uin) {
-        return userRepository.findByUinAndDeleted(uin, false) != null;
+        return userRepository.findByUin(uin) != null;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String uin) throws UsernameNotFoundException {
-        User user = userRepository.findByUinAndDeleted(uin, false);
+        User user = userRepository.findByUin(uin);
         if (user == null) {
             log.info("This uin: {} does not exist", uin);
             throw new UsernameNotFoundException("User not found in the database");

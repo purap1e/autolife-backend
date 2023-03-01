@@ -1,20 +1,20 @@
-package kz.auto_life.models.entities;
+package kz.auto_life.authservice.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+
 @Getter
 @Setter
 @Entity
 @Table(name = "users")
-@AllArgsConstructor
-@NoArgsConstructor
 public class User extends BaseEntity {
-    
+
     @Column(name = "uin", unique = true)
     private String uin;
 
