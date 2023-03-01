@@ -1,0 +1,127 @@
+variables:
+  REGISTRY: registry.gitlab.com
+  GROUP: rmr-autolife
+  PROJECT: AutoLife-backend
+  APP_IMAGE: ${REGISTRY}/${GROUP}/${PROJECT}
+  DB_IMAGE: postgres:14
+  DOCKER_DRIVER: overlay2
+  COMPOSE_DOCKER_CLI_BUILD: 1
+  COMPOSE_FILE: docker-compose.yml
+
+stages:
+  - build
+  - publish
+  - deploy
+
+build:
+  stage: build
+  image: maven:3.8.4-openjdk-17
+  script:
+    - mvn clean package -DskipTests
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - ./target
+  artifacts:
+    paths:
+      - target/*.jar
+  tags:
+    - team5bootcamp
+
+publish-feature:
+  stage: publish
+  variables:
+    TAG: $CI_COMMIT_SHORT_SHA
+  cache:
+    policy: pull
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - ./target
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - docker-compose build --build-arg APP_IMAGE=${APP_IMAGE} --build-arg TAG=${TAG}
+    - docker-compose push
+    - docker image prune -a --force --filter "until=120h"
+  needs:
+    - build
+  only:
+    - /^feature\/.*$/
+  when: manual
+  tags:
+    - team5bootcamp
+
+publish:
+  extends: publish-feature
+  variables:
+    TAG: $CI_COMMIT_REF_NAME
+  needs:
+    - build
+  only:
+    - test
+    - main
+  when: on_success
+
+deploy-all-test:
+  stage: deploy
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - docker-compose up -d
+  tags:
+    - team5bootcamp
+  variables:
+    APP_IMAGE: ${APP_IMAGE}:${CI_COMMIT_SHA}
+    STACK: team5test
+
+  needs:
+    - publish
+  only:
+    - test
+  when: manual
+
+deploy-app-test:
+  stage: deploy
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - docker-compose up -d example-service
+  tags:
+    - team5bootcamp
+  variables:
+    APP_IMAGE: ${APP_IMAGE}:${CI_COMMIT_SHA}
+    STACK: team5test
+
+  needs:
+    - publish
+  only:
+    - test
+  when: manual
+
+deploy-all-prod:
+  stage: deploy
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - docker-compose up -d
+  tags:
+    - team5bootcamp
+  variables:
+    APP_IMAGE: ${APP_IMAGE}:${CI_COMMIT_SHA}
+    STACK: team5prod
+
+  needs:
+    - publish
+  only:
+    - main
+  when: manual
+
+deploy-app-prod:
+  stage: deploy
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  script:
+    - docker-compose up -d example-service
+  tags:
+    - team5bootcamp
+
