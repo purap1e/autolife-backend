@@ -19,7 +19,6 @@
         <module>eureka-server</module>
         <module>auth-service</module>
         <module>api-gateway</module>
-        <module>models</module>
         <module>fine-car-service</module>
     </modules>
 

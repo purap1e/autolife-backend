@@ -7,7 +7,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EntityScan("kz.auto_life.models.entities")
 public class AuthServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(AuthServiceApplication.class, args);
