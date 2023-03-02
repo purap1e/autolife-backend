@@ -62,16 +62,6 @@ publish:
     - main
   when: on_success
 
-.deploy_all:
-  stage: deploy
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-  script:
-    - docker-compose pull
-    - docker-compose up -d
-  tags:
-    - team5bootcamp
-
 .deploy_app:
   stage: deploy
   before_script:
@@ -82,19 +72,7 @@ publish:
   tags:
     - team5bootcamp
 
-
-deploy-all-develop:
-  extends: .deploy_all
-  variables:
-    TAG: develop
-    STACK: team5test
-  needs:
-    - publish
-  only:
-    - develop
-  when: manual
-
-deploy-app-develop:
+deploy-develop:
   extends: .deploy_app
   variables:
     TAG: develop
@@ -105,18 +83,7 @@ deploy-app-develop:
     - develop
   when: manual
 
-deploy-all-prod:
-  extends: .deploy_all
-  variables:
-    TAG: main
-    STACK: team5prod
-  needs:
-    - publish
-  only:
-    - main
-  when: manual
-
-deploy-app-prod:
+deploy-prod:
   extends: .deploy_app
   variables:
     TAG: main
