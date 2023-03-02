@@ -4,9 +4,6 @@ variables:
   PROJECT: AutoLife-backend
   APP_IMAGE: ${REGISTRY}/${GROUP}/${PROJECT}
   DB_IMAGE: postgres:14
-  DOCKER_DRIVER: overlay2
-  COMPOSE_DOCKER_CLI_BUILD: 1
-  COMPOSE_FILE: docker-compose.yml
 
 stages:
   - build
@@ -40,8 +37,9 @@ publish-feature:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
   script:
-    - docker-compose build --build-arg APP_IMAGE=${APP_IMAGE} --build-arg TAG=${TAG}
-    - docker-compose push
+    - docker build -t ${APP_IMAGE}:${TAG} .
+    - docker push ${APP_IMAGE}:${TAG}
+    - docker image rm ${APP_IMAGE}:${TAG}
     - docker image prune -a --force --filter "until=120h"
   needs:
     - build
@@ -64,64 +62,60 @@ publish:
 
 deploy-all-test:
   stage: deploy
+  image:
+    name: docker/compose:1.29.2
+    entrypoint: [""]
+  variables:
+    TAG: test
+    STACK: team5test
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
   script:
-    - docker-compose up -d
-  tags:
-    - team5bootcamp
-  variables:
-    APP_IMAGE: ${APP_IMAGE}:${CI_COMMIT_SHA}
-    STACK: team5test
-
+    - docker-compose -f deploy/docker-compose.yml pull
+    - docker-compose -f deploy/docker-compose.yml up -d
   needs:
     - publish
   only:
     - test
   when: manual
+  tags:
+    - team5bootcamp
 
 deploy-app-test:
   stage: deploy
+  image:
+    name: docker/compose:1.29.2
+    entrypoint: [""]
+  variables:
+    TAG: test
+    STACK: team5test
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
   script:
-    - docker-compose up -d example-service
-  tags:
-    - team5bootcamp
-  variables:
-    APP_IMAGE: ${APP_IMAGE}:${CI_COMMIT_SHA}
-    STACK: team5test
-
+    - docker-compose -f deploy/docker-compose.yml pull fine-car-service
+    - docker-compose -f deploy/docker-compose.yml up -d fine-car-service
   needs:
     - publish
   only:
     - test
   when: manual
+  tags:
+    - team5bootcamp
 
 deploy-all-prod:
   stage: deploy
+  image:
+    name: docker/compose:1.29.2
+    entrypoint: [""]
+  variables:
+    TAG: main
+    STACK: team5prod
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
   script:
-    - docker-compose up -d
-  tags:
-    - team5bootcamp
-  variables:
-    APP_IMAGE: ${APP_IMAGE}:${CI_COMMIT_SHA}
-    STACK: team5prod
-
+    - docker-compose -f deploy/docker-compose.yml pull
+    - docker-compose -f deploy/docker-compose.yml up -d
   needs:
     - publish
   only:
     - main
-  when: manual
-
-deploy-app-prod:
-  stage: deploy
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-  script:
-    - docker-compose up -d example-service
-  tags:
-    - team5bootcamp
-
