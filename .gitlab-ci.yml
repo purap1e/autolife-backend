@@ -58,7 +58,7 @@ publish:
   needs:
     - build
   only:
-    - test
+    - develop
     - main
   when: on_success
 
@@ -83,26 +83,26 @@ publish:
     - team5bootcamp
 
 
-deploy-all-test:
+deploy-all-develop:
   extends: .deploy_all
   variables:
-    TAG: test
+    TAG: develop
     STACK: team5test
   needs:
     - publish
   only:
-    - test
+    - develop
   when: manual
 
-deploy-app-test:
+deploy-app-develop:
   extends: .deploy_app
   variables:
-    TAG: test
+    TAG: develop
     STACK: team5test
   needs:
     - publish
   only:
-    - test
+    - develop
   when: manual
 
 deploy-all-prod:
