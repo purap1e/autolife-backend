@@ -76,7 +76,7 @@ publish:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
   script:
-    - docker-compose up -d autolife-service
+    - docker-compose up -d
   tags:
     - team5bootcamp
 
