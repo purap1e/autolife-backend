@@ -5,6 +5,8 @@
 _**Запуск микросервисов**_: 
 + `docker-compose up`
 
+### для разработки использовать ветку: `develop`, ветка `main` для продакшна
+
 ## Сервисы:
 ### 1) `auth-service` сервис для авторизации/аудентификации:
 + ссылка на swagger: http://localhost:12582/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/
