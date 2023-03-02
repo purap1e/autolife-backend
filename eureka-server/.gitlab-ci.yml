@@ -1,7 +1,7 @@
 variables:
   REGISTRY: registry.gitlab.com
   GROUP: rmr-autolife
-  PROJECT: AutoLife-backend
+  PROJECT: AutoLife-backend/eureka-server
   APP_IMAGE: ${REGISTRY}/${GROUP}/${PROJECT}
 
 stages:
