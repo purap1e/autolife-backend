@@ -39,8 +39,8 @@ services:
     build: ./api-gateway
     depends_on:
       - eureka-server
-      - auth-service
-      - fine-car-service
+#      - auth-service
+#      - fine-car-service
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
     ports:
