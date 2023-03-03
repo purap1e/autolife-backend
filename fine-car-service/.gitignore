@@ -11,7 +11,7 @@ target/
 .project
 .settings
 .springBeans
-.sts4-cachez
+.sts4-cache
 
 ### IntelliJ IDEA ###
 .idea
@@ -31,12 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-prod.properties
-/application.log
-/application.log.*
-
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-.attach_pid*
