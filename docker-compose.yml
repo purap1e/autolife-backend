@@ -58,7 +58,7 @@ services:
     ports:
       - "12533:12533"
     volumes:
-      - /srv/bootcamp/team5/postgresql/data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
     restart: always
     networks:
       - app-network
