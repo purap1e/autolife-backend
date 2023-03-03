@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
-    private static final String secret = "secret";
+    private static final String secret = "jdksladklsajdlkasdjlsadkasl";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -38,7 +38,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(token);
                 String username = decodedJWT.getSubject();
-                String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);

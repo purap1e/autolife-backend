@@ -33,7 +33,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         String uin = request.getParameter("uin");
         String password = request.getParameter("password");
         log.info("Uin is {}", uin);
-        log.info("Password is {}", password);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(uin, password);
         return authenticationManager.authenticate(authenticationToken);
     }
@@ -41,7 +40,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        Algorithm algorithm = Algorithm.HMAC256("jdksladklsajdlkasdjlsadkasl".getBytes());
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 1000 * 30))
