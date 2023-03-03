@@ -50,15 +50,15 @@ services:
       - app-network
 
   postgres:
-    image: postgres
+    image: postgres:11.0
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: auto_life
     ports:
-      - "12533:12533"
+      - "5432:5432"
     volumes:
-      - /srv/bootcamp/team5/postgresql/data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
     restart: always
     networks:
       - app-network
