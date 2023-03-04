@@ -72,7 +72,6 @@ services:
       POSTGRES_DB: auto_life
     ports:
       - "12533:12533"
-#12533
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     restart: always

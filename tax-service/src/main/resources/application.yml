@@ -1,7 +1,6 @@
 server:
   port: 12594
 
-# id ??????????
 spring:
   application:
     name: tax-service
@@ -16,7 +15,6 @@ spring:
       ddl-auto: none
     show-sql: true
 
-# url ??? ??????????? ?????????????
 eureka:
   client:
     service-url:
@@ -29,4 +27,8 @@ management:
     web:
       exposure:
         include: "*"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/auto-life.html
 
