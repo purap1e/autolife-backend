@@ -10,21 +10,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableDiscoveryClient
-@OpenAPIDefinition(
-        info = @Info(
-                title = "Auth-service",
-                description = "Сервис для авторизации и аутентификации",
-                version = "1.0",
-                license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0.html")
-        )
-)
 public class SwaggerConfiguration {
 
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new io.swagger.v3.oas.models.info.Info()
-                        .title("Auth-service")
+                        .title("Auth-service url: http://176.9.24.125:12565")
                         .version("1.0")
                         .description("Сервис для авторизации и аутентификации")
                         .termsOfService("http://swagger.io/terms/"));
