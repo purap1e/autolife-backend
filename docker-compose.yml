@@ -9,18 +9,6 @@ services:
     networks:
       - app-network
 
-  fine-car-service:
-    build: ./fine-car-service
-    ports:
-      - "12584:12584"
-    depends_on:
-      - eureka-server
-    environment:
-      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-    restart: always
-    networks:
-      - app-network
-
   auth-service:
     build: ./auth-service
     depends_on:
@@ -28,6 +16,19 @@ services:
       - postgres
     ports:
       - "12582:12582"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
+    restart: always
+    networks:
+      - app-network
+
+  fine-car-service:
+    build: ./fine-car-service
+    ports:
+      - "12584:12584"
+    depends_on:
+      - auth-service
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
@@ -50,7 +51,7 @@ services:
       - app-network
 
   postgres:
-    image: postgres:11.0
+    image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
