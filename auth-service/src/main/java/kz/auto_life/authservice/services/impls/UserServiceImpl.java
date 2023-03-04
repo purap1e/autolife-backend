@@ -5,7 +5,6 @@ import kz.auto_life.authservice.exceptions.UinExistsException;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.repositories.UserRepository;
 import kz.auto_life.authservice.services.UserService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,11 +17,15 @@ import java.util.ArrayList;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     private boolean uinExist(String uin) {
         return userRepository.findByUin(uin) != null;
