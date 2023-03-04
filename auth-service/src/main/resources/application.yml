@@ -1,5 +1,6 @@
 server:
   port: 12582
+#12582
 
 # id приложения
 spring:

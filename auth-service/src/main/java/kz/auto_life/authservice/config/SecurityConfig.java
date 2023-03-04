@@ -1,7 +1,6 @@
 package kz.auto_life.authservice.config;
 
 import kz.auto_life.authservice.filters.CustomAuthenticationFilter;
-import kz.auto_life.authservice.filters.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,10 +29,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/user/registration",
-                        "/api/v1/test").permitAll();
+                .antMatchers("/api/auth/registration").permitAll();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(jwtAuthorizationFilter());
+    }
+
+    public CustomAuthenticationFilter jwtAuthorizationFilter() throws Exception {
+        CustomAuthenticationFilter jwtAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager());
+        jwtAuthenticationFilter.setFilterProcessesUrl("/api/auth/login");
+        return jwtAuthenticationFilter;
     }
 
     @Bean
