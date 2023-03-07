@@ -15,10 +15,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Setter
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@Entity
-@Table(name = "vehicles")
-public class Vehicle implements Serializable {
+public abstract class Vehicle implements Serializable {
 
     public static final int MCI = 3063;
 
@@ -45,7 +44,6 @@ public class Vehicle implements Serializable {
     @JsonIgnore
     private Boolean deleted = false;
 
-    public int getTaxAmount(){
-        return 0;
-    };
+    @JsonIgnore
+    public abstract int getTaxAmount();
 }

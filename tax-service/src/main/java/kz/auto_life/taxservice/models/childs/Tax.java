@@ -2,13 +2,11 @@ package kz.auto_life.taxservice.models.childs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import kz.auto_life.taxservice.models.BaseEntity;
-import kz.auto_life.taxservice.models.Vehicle;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.EAGER;
 
 @Getter
 @Setter
@@ -25,7 +23,7 @@ public class Tax extends BaseEntity {
     @Column(name = "amount")
     private int amount;
 
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name="vehicle_id")
-    private Vehicle vehicle;
+//    @ManyToOne(fetch = EAGER)
+//    @JoinColumn(name="vehicle_id")
+//    private Vehicle vehicle;
 }
