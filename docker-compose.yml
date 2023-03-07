@@ -1,81 +1,81 @@
 version: "3.9"
 
 services:
-#  eureka-server:
-#    build: ./eureka-server
-#    ports:
-#      - "12561:12561"
-#    restart: always
-#    networks:
-#      - app-network
-#
-#  fine-car-service:
-#    build: ./fine-car-service
-#    ports:
-#      - "12584:12584"
-#    depends_on:
-#      - eureka-server
-#    environment:
-#      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-#    restart: always
-#    networks:
-#      - app-network
-#
-#  auth-service:
-#    build: ./auth-service
-#    depends_on:
-#      - eureka-server
-#      - postgres
-#    ports:
-#      - "12582:12582"
-#    environment:
-#      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
-#    restart: always
-#    networks:
-#      - app-network
-#
-#  tax-service:
-#    build: ./tax-service
-#    depends_on:
-#      - eureka-server
-#      - postgres
-#    ports:
-#      - "12594:12594"
-#    environment:
-#      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
-#    restart: always
-#    networks:
-#      - app-network
-#
-#  api-gateway:
-#    build: ./api-gateway
-#    depends_on:
-#      - eureka-server
-#      - auth-service
-#      - fine-car-service
-#    environment:
-#      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-#    ports:
-#      - "12565:12565"
-#    restart: always
-#    networks:
-#      - app-network
-#
-#  postgres:
-#    image: postgres:11.0
-#    environment:
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: postgres
-#      POSTGRES_DB: auto_life
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - ./postgres-data:/var/lib/postgresql/data
-#    restart: always
-#    networks:
-#      - app-network
+  eureka-server:
+    build: ./eureka-server
+    ports:
+      - "12561:12561"
+    restart: always
+    networks:
+      - app-network
+
+  fine-car-service:
+    build: ./fine-car-service
+    ports:
+      - "12584:12584"
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
+    restart: always
+    networks:
+      - app-network
+
+  auth-service:
+    build: ./auth-service
+    depends_on:
+      - eureka-server
+      - postgres
+    ports:
+      - "12582:12582"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
+    restart: always
+    networks:
+      - app-network
+
+  vehicle-service:
+    build: ./vehicle-service
+    depends_on:
+      - eureka-server
+      - postgres
+    ports:
+      - "12594:12594"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
+    restart: always
+    networks:
+      - app-network
+
+  api-gateway:
+    build: ./api-gateway
+    depends_on:
+      - eureka-server
+      - auth-service
+      - fine-car-service
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
+    ports:
+      - "12565:12565"
+    restart: always
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:11.0
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auto_life
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - app-network
 
 networks:
   app-network:

@@ -23,7 +23,7 @@ spring:
             - Path=/api/fine
             - Method=GET
         - id: vehicle
-          uri: lb://tax-service
+          uri: lb://vehicle-service
           predicates:
             - Path=/api/vehicle/**
             - Method=POST
