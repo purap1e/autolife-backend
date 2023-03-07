@@ -33,5 +33,4 @@ public class User extends BaseEntity {
 
     @Column(name = "phone", unique = true)
     private String phone;
-
 }

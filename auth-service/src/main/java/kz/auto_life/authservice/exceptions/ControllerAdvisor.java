@@ -11,8 +11,18 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(PhoneExistsException.class)
+    public ResponseEntity<Object> handleUsernameExistsException(PhoneExistsException ex) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("errorCode", "phone_exists");
+        body.put("errorDescription", String.format("The phone '%s' already exists", ex.getPhone()));
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(UinExistsException.class)
-    public ResponseEntity<Object> handleUsernameExistsException(UinExistsException ex) {
+    public ResponseEntity<Object> handleUinExistsException(UinExistsException ex) {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("errorCode", "uin_exists");

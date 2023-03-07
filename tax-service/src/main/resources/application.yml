@@ -1,0 +1,37 @@
+server:
+  port: 12594
+#12580
+
+# id ??????????
+spring:
+  application:
+    name: tax-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/auto_life
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+#  liquibase:
+#    enabled: true
+#    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+# url ??? ??????????? ?????????????
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:12561/eureka
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+

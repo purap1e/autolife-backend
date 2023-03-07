@@ -1,7 +1,8 @@
 package kz.auto_life.authservice.services.impls;
 
-import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.exceptions.UinExistsException;
+import kz.auto_life.authservice.models.User;
+import kz.auto_life.authservice.exceptions.PhoneExistsException;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.repositories.UserRepository;
 import kz.auto_life.authservice.services.UserService;
@@ -27,14 +28,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    private boolean uinExist(String uin) {
+    private boolean phoneExists(String phone) {
+        return userRepository.findByPhone(phone) != null;
+    }
+    private boolean uinExists(String uin) {
         return userRepository.findByUin(uin) != null;
     }
 
     @Override
     @Transactional
     public User register(UserRegisterRequest request) {
-        if (uinExist(request.getUin())) {
+        if (phoneExists(request.getPhone())) {
+            throw new PhoneExistsException(request.getPhone());
+        } else if (uinExists(request.getUin())) {
             throw new UinExistsException(request.getUin());
         } else {
             User user = new User();
@@ -50,14 +56,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String uin) throws UsernameNotFoundException {
-        User user = userRepository.findByUin(uin);
+    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
+        User user = userRepository.findByPhone(phone);
         if (user == null) {
-            log.info("This uin: {} does not exist", uin);
+            log.info("Phone '{}' does not exist, please try again", phone);
             throw new UsernameNotFoundException("User not found in the database");
         } else {
-            log.info("uin {} found in the database", uin);
+            log.info("Phone '{}' found in the database!", phone);
         }
-        return new org.springframework.security.core.userdetails.User(user.getUin(), user.getPassword(), new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(user.getPhone(), user.getPassword(), new ArrayList<>());
     }
 }
