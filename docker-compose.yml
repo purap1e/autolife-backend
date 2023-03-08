@@ -55,6 +55,7 @@ services:
       - eureka-server
       - auth-service
       - fine-car-service
+      - tax-service
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
     ports:
@@ -70,7 +71,8 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: auto_life
     ports:
-      - "5432:5432"
+      - "12533:12533"
+#12533
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     restart: always

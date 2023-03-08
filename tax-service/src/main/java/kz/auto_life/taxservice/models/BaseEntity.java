@@ -26,11 +26,23 @@ public abstract class BaseEntity implements Serializable {
 
     @Column(updatable = false)
     @CreationTimestamp
+    @JsonIgnore
     protected LocalDateTime createdAt;
+
     @UpdateTimestamp
+    @JsonIgnore
     protected LocalDateTime updatedAt;
 
     @Column(name = "deleted", nullable = false)
     @JsonIgnore
     private Boolean deleted = false;
+
+    @Column(name = "user_iin")
+    private String userIin;
+
+    @Column(name = "grnz", unique = true)
+    private String grnz;
+
+    @Column(name = "vehicle_type")
+    private String type;
 }

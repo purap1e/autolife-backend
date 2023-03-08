@@ -20,4 +20,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Object> UnauthorizedException(UnauthorizedException ex) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("errorCode", "Unauthorized");
+        body.put("errorDescription", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
 }

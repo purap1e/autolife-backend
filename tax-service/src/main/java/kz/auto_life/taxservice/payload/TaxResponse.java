@@ -6,10 +6,11 @@ import lombok.*;
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class TaxResponse {
+    private Long id;
     private String iin;
     private String grnz;
     private String vehicleType;
     private int amount;
+    private int status;
 }

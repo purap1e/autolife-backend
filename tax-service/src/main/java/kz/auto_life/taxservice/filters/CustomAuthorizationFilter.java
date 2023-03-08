@@ -25,7 +25,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
-
     private static final String secret = "jdksladklsajdlkasdjlsadkasl";
 
     @Override

@@ -1,6 +1,8 @@
 package kz.auto_life.taxservice.models.childs;
 
 import kz.auto_life.taxservice.models.BaseEntity;
+import kz.auto_life.taxservice.models.Vehicle;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,5 +22,4 @@ public class Tax extends BaseEntity {
 
     @Column(name = "amount")
     private int amount;
-
 }

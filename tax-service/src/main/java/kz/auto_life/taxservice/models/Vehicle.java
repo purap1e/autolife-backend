@@ -16,50 +16,13 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-public abstract class Vehicle implements Serializable {
+@Entity
+@Table(name = "vehicles")
+public class Vehicle extends BaseEntity {
 
-    public static final int MCI = 3063;
+    @Column(name = "vehicle_key")
+    private String key;
 
-//    @Id
-//    @GeneratedValue(strategy = IDENTITY)
-//    protected Long id;
-
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator",
-            parameters = {
-                    @Parameter(
-                            name = "uuid_gen_strategy_class",
-                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )
-            }
-    )
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
-
-    @Column(updatable = false)
-    @CreationTimestamp
-    protected LocalDateTime createdAt;
-    @UpdateTimestamp
-    protected LocalDateTime updatedAt;
-
-    @Column(name = "user_iin")
-    private String userIin;
-
-    @Column(name = "grnz", unique = true)
-    private String grnz;
-
-    @Column(name = "vehicle_type")
-    private String type;
-
-    @Column(name = "deleted", nullable = false)
-    @JsonIgnore
-    private Boolean deleted = false;
-
-    @JsonIgnore
-    public abstract int getTaxAmount();
+    @Column(name = "vehicle_value")
+    private String value;
 }
