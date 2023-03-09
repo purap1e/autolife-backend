@@ -1,4 +1,4 @@
-package kz.auto_life.finecarservice.config;
+package kz.auto_life.finecarservice.configs;
 
 import kz.auto_life.finecarservice.filters.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;

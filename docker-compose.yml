@@ -36,12 +36,27 @@ services:
     networks:
       - app-network
 
+  tax-service:
+    build: ./tax-service
+    depends_on:
+      - eureka-server
+      - postgres
+    ports:
+      - "12594:12594"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
+    restart: always
+    networks:
+      - app-network
+
   api-gateway:
     build: ./api-gateway
     depends_on:
       - eureka-server
       - auth-service
       - fine-car-service
+      - tax-service
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
     ports:
@@ -51,7 +66,7 @@ services:
       - app-network
 
   postgres:
-    image: postgres
+    image: postgres:11.0
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

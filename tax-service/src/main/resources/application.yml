@@ -1,12 +1,20 @@
 server:
-  port: 12584
+  port: 12594
 
-# id приложения
 spring:
   application:
-    name: fine-car-service
+    name: tax-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/auto_life
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
 
-# url для регистрации микросервисов
 eureka:
   client:
     service-url:

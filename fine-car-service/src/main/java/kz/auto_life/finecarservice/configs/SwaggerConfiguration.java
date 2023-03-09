@@ -1,4 +1,4 @@
-package kz.auto_life.finecarservice.config;
+package kz.auto_life.finecarservice.configs;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;

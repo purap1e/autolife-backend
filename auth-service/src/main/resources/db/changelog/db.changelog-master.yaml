@@ -4,3 +4,14 @@ databaseChangeLog:
       author: duman.sabyrbayev
       sqlFile:
         path: db/changelog/sql_scripts/00000000000000_initial.sql
+
+  - changeSet:
+      id: 4
+      author: daniyar.bulegenov
+      sqlFile:
+        path: db/changelog/sql_scripts/00000000000001_create_tables.sql
+  - changeSet:
+      id: 5
+      author: daniyar.bulegenov
+      sqlFile:
+        path: db/changelog/sql_scripts/00000000000002_create_tables.sql
