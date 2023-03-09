@@ -28,7 +28,8 @@ services:
     ports:
       - "12584:12584"
     depends_on:
-      - auth-service
+      - eureka-server
+      - postgres
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
@@ -66,7 +67,7 @@ services:
       - app-network
 
   postgres:
-    image: postgres:11.0
+    image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
