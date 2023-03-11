@@ -21,6 +21,8 @@
         <module>api-gateway</module>
         <module>fine-car-service</module>
         <module>tax-service</module>
+        <module>card-service</module>
+        <module>payment-service</module>
     </modules>
 
 </project>

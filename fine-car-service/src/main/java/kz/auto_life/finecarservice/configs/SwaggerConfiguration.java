@@ -10,16 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableDiscoveryClient
-@OpenAPIDefinition(
-        info = @Info(
-                title = "Fine-car-service",
-                description = "Сервис для отслеживания и оплаты штрафов на автомобиль",
-                version = "1.0",
-                license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0.html")
-        )
-)
 public class SwaggerConfiguration {
-
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()

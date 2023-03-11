@@ -38,3 +38,7 @@ management:
 springdoc:
   swagger-ui:
     path: /swagger-ui/auto-life.html
+
+jwt:
+  secret: jdksladklsajdlkasdjlsadkasl
+  expiresAt: 1800000

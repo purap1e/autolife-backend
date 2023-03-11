@@ -9,8 +9,8 @@ create table taxes
     user_iin varchar(12),
     grnz varchar(255),
     vehicle_type varchar(255),
-    amount int,
-    status int
+    amount decimal,
+    paid Boolean
 );
 
 alter table taxes
