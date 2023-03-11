@@ -81,14 +81,13 @@ services:
       - app-network
 
   postgres:
-    image: postgres:11.0
+    image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: auto_life
     ports:
-      - "5432:5432"
-#      12533
+      - "12533:12533"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     restart: always
