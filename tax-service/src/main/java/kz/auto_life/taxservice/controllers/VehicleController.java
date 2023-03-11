@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import kz.auto_life.taxservice.payload.VehicleRequest;
 import kz.auto_life.taxservice.payload.VehicleResponse;
 
-import javax.servlet.http.HttpServletRequest;
-
-
 @Tag(name = "Vehicle API")
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +24,8 @@ public class VehicleController {
             description = "создает автомобиль 3 видов")
     @ApiResponse(responseCode = "201", description = "OK")
     @PostMapping
-    public ResponseEntity<VehicleResponse> createVehicle(HttpServletRequest request,
+    public ResponseEntity<VehicleResponse> createVehicle(@RequestHeader("Authorization") String token,
                                                          @RequestBody VehicleRequest vehicleRequest) {
-        String token = request.getHeader("Authorization");
         if (token == null || !token.equals("Basic YWRtaW46cGFzc3dvcmQ=")) {
             throw new UnauthorizedException("Invalid credentials");
         }

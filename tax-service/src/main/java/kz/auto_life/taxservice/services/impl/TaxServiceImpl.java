@@ -1,16 +1,22 @@
 package kz.auto_life.taxservice.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kz.auto_life.taxservice.filters.CustomAuthorizationFilter;
 import kz.auto_life.taxservice.models.Vehicle;
 import kz.auto_life.taxservice.models.childs.Tax;
+import kz.auto_life.taxservice.payload.WithdrawRequest;
 import kz.auto_life.taxservice.repositories.TaxRepository;
 import kz.auto_life.taxservice.repositories.VehicleRepository;
 import kz.auto_life.taxservice.services.TaxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -20,6 +26,8 @@ public class TaxServiceImpl implements TaxService {
 
     private final TaxRepository taxRepository;
     private final VehicleRepository vehicleRepository;
+
+    private String postUrlForWithdraw = "http://localhost:12565/api/cards/withdraw";
 
     public int getAmount(String vehicleType, String vehicleValue) {
         switch (vehicleType) {
@@ -99,11 +107,29 @@ public class TaxServiceImpl implements TaxService {
     }
 
     @Override
-    public List<Tax> payTaxes(List<Long> ids) {
+    public List<Tax> payTaxes(WithdrawRequest request) {
         List<Tax> taxes = new ArrayList<>();
-        ids.forEach(id -> {
-            taxes.add(getById(id));
-        });
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + CustomAuthorizationFilter.token1);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            String json = new ObjectMapper().writeValueAsString(request);
+            HttpEntity<String> entity = new HttpEntity<>(json, headers);
+            ResponseEntity<String> res = restTemplate.exchange(postUrlForWithdraw, HttpMethod.POST, entity, String.class);
+            System.out.println(res);
+
+            if (Objects.equals(res.getBody(), "success")) {
+                request.getAttributes()
+                        .forEach(x -> taxes.add(getById(x.getId())));
+            } else {
+                throw new RuntimeException("error");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         return taxes;
     }
 }

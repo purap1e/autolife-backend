@@ -6,12 +6,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.auto_life.taxservice.exceptions.UnauthorizedException;
 import kz.auto_life.taxservice.payload.TaxRequest;
 import kz.auto_life.taxservice.payload.TaxResponse;
+import kz.auto_life.taxservice.payload.WithdrawRequest;
 import kz.auto_life.taxservice.services.TaxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Tag(name = "Tax API")
@@ -45,8 +45,8 @@ public class TaxController {
             description = "оплата налогов по id")
     @ApiResponse(responseCode = "200", description = "OK")
     @PostMapping("/pay")
-    public ResponseEntity<List<TaxResponse>> payTaxes(@RequestBody TaxRequest taxRequest) {
-        List<TaxResponse> taxes = taxService.payTaxes(taxRequest.getIds())
+    public ResponseEntity<List<TaxResponse>> payTaxes(@RequestBody WithdrawRequest request) {
+        List<TaxResponse> taxes = taxService.payTaxes(request)
                 .stream()
                 .map(x -> new TaxResponse(
                         x.getId(),
@@ -62,8 +62,7 @@ public class TaxController {
     @Operation(summary = "Счет на налог (имеет доступ только админ)",
             description = "процесс счета налогов")
     @PostMapping("/private/process")
-    public void process(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
+    public void process(@RequestHeader("Authorization") String token) {
         if (token == null || !token.equals("Basic YWRtaW46cGFzc3dvcmQ=")) {
             throw new UnauthorizedException("Invalid credentials");
         }

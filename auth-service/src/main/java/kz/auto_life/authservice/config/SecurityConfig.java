@@ -32,8 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .anyRequest().permitAll();
-        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean(), userRepository));
         http.addFilter(jwtAuthorizationFilter());
+        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean(), userRepository));
     }
 
     public CustomAuthenticationFilter jwtAuthorizationFilter() throws Exception {

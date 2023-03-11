@@ -1,4 +1,4 @@
-package kz.auto_life.authservice.controller;
+package kz.auto_life.authservice.controllers;
 
 
 import io.swagger.v3.oas.annotations.Operation;
