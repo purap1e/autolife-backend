@@ -10,7 +10,7 @@ databaseChangeLog:
       sqlFile:
         path: db/changelog/sql_scripts/00000000000001_create_tables.sql
   - changeSet:
-      id: 5
+      id: 8
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000002_create_tables.sql

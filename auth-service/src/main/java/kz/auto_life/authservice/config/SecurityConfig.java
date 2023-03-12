@@ -1,6 +1,7 @@
 package kz.auto_life.authservice.config;
 
 import kz.auto_life.authservice.filters.CustomAuthenticationFilter;
+import kz.auto_life.authservice.properties.JwtProperties;
 import kz.auto_life.authservice.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
+    private final JwtProperties jwtProperties;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -33,11 +35,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().permitAll();
         http.addFilter(jwtAuthorizationFilter());
-        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean(), userRepository));
+        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean(), userRepository, jwtProperties));
     }
 
     public CustomAuthenticationFilter jwtAuthorizationFilter() throws Exception {
-        CustomAuthenticationFilter jwtAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager(), userRepository);
+        CustomAuthenticationFilter jwtAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager(), userRepository, jwtProperties);
         jwtAuthenticationFilter.setFilterProcessesUrl("/api/auth/login");
         return jwtAuthenticationFilter;
     }

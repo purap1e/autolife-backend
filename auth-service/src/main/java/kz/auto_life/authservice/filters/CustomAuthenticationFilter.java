@@ -2,6 +2,7 @@ package kz.auto_life.authservice.filters;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import kz.auto_life.authservice.properties.JwtProperties;
 import kz.auto_life.authservice.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,10 +23,13 @@ import java.util.stream.Collectors;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final JwtProperties jwtProperties;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
+
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, JwtProperties jwtProperties) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.jwtProperties = jwtProperties;
     }
 
     @Override
@@ -41,10 +45,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         kz.auto_life.authservice.models.User user1 = userRepository.findByPhone(user.getUsername());
-        Algorithm algorithm = Algorithm.HMAC256("jdksladklsajdlkasdjlsadkasl".getBytes());
+        Algorithm algorithm = Algorithm.HMAC256(jwtProperties.getSecret().getBytes());
         String access_token = JWT.create()
                 .withSubject(String.valueOf(user1.getId()))
-                .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 1000 * 30))
+                .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpiresAt()))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);

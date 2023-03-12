@@ -2,8 +2,10 @@ package kz.auto_life.taxservice.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.auto_life.taxservice.filters.CustomAuthorizationFilter;
+import kz.auto_life.taxservice.mappers.TaxMapper;
+import kz.auto_life.taxservice.models.Tax;
 import kz.auto_life.taxservice.models.Vehicle;
-import kz.auto_life.taxservice.models.childs.Tax;
+import kz.auto_life.taxservice.payload.TaxResponse;
 import kz.auto_life.taxservice.payload.WithdrawRequest;
 import kz.auto_life.taxservice.repositories.TaxRepository;
 import kz.auto_life.taxservice.repositories.VehicleRepository;
@@ -14,64 +16,64 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class TaxServiceImpl implements TaxService {
-    public static final int MCI = 3093;
+    public static final double MCI = 3093;
 
     private final TaxRepository taxRepository;
     private final VehicleRepository vehicleRepository;
+    private final TaxMapper taxMapper;
 
     private String postUrlForWithdraw = "http://localhost:12565/api/cards/withdraw";
 
-    public int getAmount(String vehicleType, String vehicleValue) {
+    public BigDecimal getAmount(String vehicleType, String vehicleValue) {
         switch (vehicleType) {
             case "CAR":
                 int engineCapacity = Integer.parseInt(vehicleValue);
                 if (engineCapacity <= 1100) {
-                    return MCI;
+                    return new BigDecimal(MCI);
                 } else if (engineCapacity <= 1500) {
-                    return MCI * 2;
+                    return new BigDecimal(MCI * 2);
                 } else if (engineCapacity <= 2000) {
-                    return MCI * 3 + (engineCapacity - 1500) * 7;
+                    return new BigDecimal(MCI * 3 + (engineCapacity - 1500) * 7);
                 } else if (engineCapacity <= 2500) {
-                    return MCI * 6 + (engineCapacity - 1500) * 7;
+                    return new BigDecimal(MCI * 6 + (engineCapacity - 1500) * 7);
                 } else if (engineCapacity <= 3000) {
-                    return MCI * 9 + (engineCapacity - 1500) * 7;
+                    return new BigDecimal(MCI * 9 + (engineCapacity - 1500) * 7);
                 } else if (engineCapacity <= 4000) {
-                    return MCI * 15 + (engineCapacity - 1500) * 7;
+                    return new BigDecimal(MCI * 15 + (engineCapacity - 1500) * 7);
                 } else if (engineCapacity <= 5000) {
-                    return MCI * 117 + (engineCapacity - 1500) * 7;
+                    return new BigDecimal(MCI * 117 + (engineCapacity - 1500) * 7);
                 } else {
-                    return MCI * 200 + (engineCapacity - 1500) * 7;
+                    return new BigDecimal(MCI * 200 + (engineCapacity - 1500) * 7);
                 }
             case "BUS":
                 int seats = Integer.parseInt(vehicleValue);
                 if (seats <= 12) {
-                    return MCI * 9;
+                    return new BigDecimal(MCI * 9);
                 } else if (seats <= 25) {
-                    return MCI * 14;
+                    return new BigDecimal(MCI * 14);
                 } else {
-                    return MCI * 20;
+                    return new BigDecimal(MCI * 20);
                 }
             case "FREIGHT":
                 double loadCapacity = Double.parseDouble(vehicleValue);
                 if (loadCapacity <= 1) {
-                    return MCI * 3;
+                    return new BigDecimal(MCI * 3);
                 } else if (loadCapacity <= 1.5) {
-                    return MCI * 5;
+                    return new BigDecimal(MCI * 5);
                 } else if (loadCapacity <= 5) {
-                    return MCI * 7;
+                    return new BigDecimal(MCI * 7);
                 } else {
-                    return MCI * 9;
+                    return new BigDecimal(MCI * 9);
                 }
         }
-        return 0;
+        return BigDecimal.valueOf(0);
     }
 
     @Override
@@ -96,18 +98,21 @@ public class TaxServiceImpl implements TaxService {
     }
 
     @Override
-    public List<Tax> getAllByIinAndStatus(String iin, int status) {
-        return taxRepository.findAllByUserIinAndStatus(iin, status);
+    public List<TaxResponse> getAllForUser(String iin, Boolean paid) {
+        return taxRepository.findAllByUserIinAndPaid(iin, paid)
+                .stream()
+                .map(taxMapper)
+                .toList();
     }
 
     public Tax getById(Long id) {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new RuntimeException("Tax not found"));
-        tax.setStatus(2);
+        tax.setPaid(true);
         return taxRepository.save(tax);
     }
 
     @Override
-    public List<Tax> payTaxes(WithdrawRequest request) {
+    public List<TaxResponse> payTaxes(WithdrawRequest request) {
         List<Tax> taxes = new ArrayList<>();
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -129,7 +134,6 @@ public class TaxServiceImpl implements TaxService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        return taxes;
+        return taxes.stream().map(taxMapper).toList();
     }
 }
