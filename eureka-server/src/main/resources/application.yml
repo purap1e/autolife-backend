@@ -1,12 +1,10 @@
 server:
   port: 12561
 
-# id приложения
 spring:
   application:
     name: eureka-server
 
-# url для регистрации микросервисов
 eureka:
   client:
     register-with-eureka: false

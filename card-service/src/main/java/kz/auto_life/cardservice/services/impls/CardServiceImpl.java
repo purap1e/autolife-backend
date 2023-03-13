@@ -53,29 +53,29 @@ public class CardServiceImpl implements CardService {
     @Override
     public String withdraw(WithdrawRequest request) {
         Card card = cardRepository.findById(request.getCardId()).orElseThrow(() -> new RuntimeException("card not found"));
+        if (Long.parseLong(CustomAuthorizationFilter.userId) == card.getUserId()) {
+            int sum = request.getAttributes().stream()
+                    .mapToInt(WithdrawAttributes::getAmount)
+                    .sum();
+            if (card.getAmount() - sum >= 0) {
+                card.setAmount(card.getAmount() - sum);
 
-        int sum = request.getAttributes().stream()
-                .mapToInt(WithdrawAttributes::getAmount)
-                .sum();
-        if (card.getAmount() - sum >= 0) {
-            card.setAmount(card.getAmount() - sum);
+                request.getAttributes()
+                        .forEach(x -> {
+                            Transaction transaction = new Transaction();
+                            transaction.setServiceId(x.getId());
+                            transaction.setServiceType(String.valueOf(ServiceTypes.TAX));
+                            transaction.setServiceDescription(String.format("Tax for vehicle with grnz '%s'", x.getGrnz()));
+                            transaction.setServiceAmount(x.getAmount());
+                            transaction.setUserId(Long.parseLong(CustomAuthorizationFilter.userId));
+                            transactionService.save(transaction);
+                        });
 
-            request.getAttributes()
-                    .forEach(x -> {
-                        Transaction transaction = new Transaction();
-                        transaction.setServiceId(x.getId());
-                        transaction.setServiceType(String.valueOf(ServiceTypes.TAX));
-                        transaction.setServiceDescription("");
-                        transaction.setServiceAmount(x.getAmount());
-                        transaction.setUserId(Long.parseLong(CustomAuthorizationFilter.userId));
-                        transactionService.save(transaction);
-                    });
-
-            cardRepository.save(card);
-            return "success";
-        } else {
-            return "error";
+                cardRepository.save(card);
+                return "success";
+            }
         }
+        return "error";
     }
 
     @Override

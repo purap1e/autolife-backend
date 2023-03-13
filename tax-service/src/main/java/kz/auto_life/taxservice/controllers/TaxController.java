@@ -33,7 +33,7 @@ public class TaxController {
     @ApiResponse(responseCode = "200", description = "OK")
     @PostMapping("/pay")
     public List<TaxResponse> payTaxes(@RequestBody WithdrawRequest request) {
-        return taxService.payTaxes(request);
+        return taxService.updateTaxes(request);
     }
 
     @Operation(summary = "Счет на налог (имеет доступ только админ)",

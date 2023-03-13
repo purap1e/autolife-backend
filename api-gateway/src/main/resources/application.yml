@@ -32,6 +32,11 @@ spring:
           predicates:
             - Path=/api/cards/**, /api/transactions
             - Method=POST,GET
+        - id: payment
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/payments/**
+            - Method=POST,GET
 
 
 # url для регистрации микросервисов

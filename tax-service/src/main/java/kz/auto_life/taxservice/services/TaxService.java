@@ -10,5 +10,5 @@ public interface TaxService {
     void process();
     List<TaxResponse> getAllForUser(String iin, Boolean paid);
 
-    List<TaxResponse> payTaxes(WithdrawRequest request);
+    List<TaxResponse> updateTaxes(WithdrawRequest request);
 }

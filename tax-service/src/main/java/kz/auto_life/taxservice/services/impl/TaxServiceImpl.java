@@ -1,7 +1,5 @@
 package kz.auto_life.taxservice.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kz.auto_life.taxservice.filters.CustomAuthorizationFilter;
 import kz.auto_life.taxservice.mappers.TaxMapper;
 import kz.auto_life.taxservice.models.Tax;
 import kz.auto_life.taxservice.models.Vehicle;
@@ -12,12 +10,11 @@ import kz.auto_life.taxservice.repositories.VehicleRepository;
 import kz.auto_life.taxservice.services.TaxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -28,50 +25,40 @@ public class TaxServiceImpl implements TaxService {
     private final TaxRepository taxRepository;
     private final VehicleRepository vehicleRepository;
     private final TaxMapper taxMapper;
+    private final double defaultEngineCapacity = 1500;
 
-    private String postUrlForWithdraw = "http://localhost:12565/api/cards/withdraw";
+    private final double[][] valuesOfEngineCapacity = {{1100, 1}, {1500, 2}, {2000, 3}, {2500, 6}, {3000, 9}, {4000, 15}, {5000, 117}, {0, 200}};
+    private final double[][] valuesOfLoadCapacity = {{1, 3}, {1.5, 5}, {5, 7}, {0, 9}};
+    private final double[][] seatsOfBus = {{12, 9}, {25, 14}, {0, 20}};
+
+
+    public BigDecimal calculateAmount(double[][] array, String vehicleValue) {
+        double value = Double.parseDouble(vehicleValue);
+        BigDecimal res = new BigDecimal(0);
+        double exceed = 0;
+        if (value > defaultEngineCapacity) {
+            exceed = (value - defaultEngineCapacity) * 7;
+        }
+        for (int i = 0; i < array.length - 1; i++) {
+            if (value <= array[i][0]) {
+                res = BigDecimal.valueOf(array[i][1] * MCI + exceed);
+                break;
+            }
+        }
+        if (!res.equals(new BigDecimal(0))) {
+            return res;
+        }
+        return BigDecimal.valueOf(MCI * array[array.length - 1][1] + exceed);
+    }
 
     public BigDecimal getAmount(String vehicleType, String vehicleValue) {
         switch (vehicleType) {
             case "CAR":
-                int engineCapacity = Integer.parseInt(vehicleValue);
-                if (engineCapacity <= 1100) {
-                    return new BigDecimal(MCI);
-                } else if (engineCapacity <= 1500) {
-                    return new BigDecimal(MCI * 2);
-                } else if (engineCapacity <= 2000) {
-                    return new BigDecimal(MCI * 3 + (engineCapacity - 1500) * 7);
-                } else if (engineCapacity <= 2500) {
-                    return new BigDecimal(MCI * 6 + (engineCapacity - 1500) * 7);
-                } else if (engineCapacity <= 3000) {
-                    return new BigDecimal(MCI * 9 + (engineCapacity - 1500) * 7);
-                } else if (engineCapacity <= 4000) {
-                    return new BigDecimal(MCI * 15 + (engineCapacity - 1500) * 7);
-                } else if (engineCapacity <= 5000) {
-                    return new BigDecimal(MCI * 117 + (engineCapacity - 1500) * 7);
-                } else {
-                    return new BigDecimal(MCI * 200 + (engineCapacity - 1500) * 7);
-                }
+                return calculateAmount(valuesOfEngineCapacity, vehicleValue);
             case "BUS":
-                int seats = Integer.parseInt(vehicleValue);
-                if (seats <= 12) {
-                    return new BigDecimal(MCI * 9);
-                } else if (seats <= 25) {
-                    return new BigDecimal(MCI * 14);
-                } else {
-                    return new BigDecimal(MCI * 20);
-                }
+                return calculateAmount(seatsOfBus, vehicleValue);
             case "FREIGHT":
-                double loadCapacity = Double.parseDouble(vehicleValue);
-                if (loadCapacity <= 1) {
-                    return new BigDecimal(MCI * 3);
-                } else if (loadCapacity <= 1.5) {
-                    return new BigDecimal(MCI * 5);
-                } else if (loadCapacity <= 5) {
-                    return new BigDecimal(MCI * 7);
-                } else {
-                    return new BigDecimal(MCI * 9);
-                }
+                return calculateAmount(valuesOfLoadCapacity, vehicleValue);
         }
         return BigDecimal.valueOf(0);
     }
@@ -112,28 +99,10 @@ public class TaxServiceImpl implements TaxService {
     }
 
     @Override
-    public List<TaxResponse> payTaxes(WithdrawRequest request) {
+    public List<TaxResponse> updateTaxes(WithdrawRequest request) {
         List<Tax> taxes = new ArrayList<>();
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + CustomAuthorizationFilter.token1);
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            String json = new ObjectMapper().writeValueAsString(request);
-            HttpEntity<String> entity = new HttpEntity<>(json, headers);
-            ResponseEntity<String> res = restTemplate.exchange(postUrlForWithdraw, HttpMethod.POST, entity, String.class);
-            System.out.println(res);
-
-            if (Objects.equals(res.getBody(), "success")) {
-                request.getAttributes()
-                        .forEach(x -> taxes.add(getById(x.getId())));
-            } else {
-                throw new RuntimeException("error");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        request.getAttributes()
+                .forEach(x -> taxes.add(getById(x.getId())));
         return taxes.stream().map(taxMapper).toList();
     }
 }

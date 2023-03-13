@@ -2,7 +2,6 @@ package kz.auto_life.cardservice.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import kz.auto_life.cardservice.models.Card;
 import kz.auto_life.cardservice.payload.CardRequest;
 import kz.auto_life.cardservice.payload.CardResponse;
 import kz.auto_life.cardservice.payload.WithdrawRequest;

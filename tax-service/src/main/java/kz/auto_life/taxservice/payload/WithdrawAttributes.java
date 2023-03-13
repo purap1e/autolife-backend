@@ -8,4 +8,5 @@ import lombok.Setter;
 public class WithdrawAttributes {
     private Long id;
     private int amount;
+    private String grnz;
 }
