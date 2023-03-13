@@ -1,8 +1,7 @@
 package kz.auto_life.authservice.services.impls;
 
-import kz.auto_life.authservice.exceptions.UinExistsException;
+import kz.auto_life.authservice.exceptions.*;
 import kz.auto_life.authservice.models.User;
-import kz.auto_life.authservice.exceptions.PhoneExistsException;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.repositories.UserRepository;
 import kz.auto_life.authservice.services.UserService;
@@ -39,9 +38,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public User register(UserRegisterRequest request) {
         if (phoneExists(request.getPhone())) {
-            throw new PhoneExistsException(request.getPhone());
+            throw new ExistsException(String.format("The phone '%s' already exists", request.getPhone()));
         } else if (uinExists(request.getUin())) {
-            throw new UinExistsException(request.getUin());
+            throw new ExistsException(String.format("The uin '%s' already exists", request.getUin()));
         } else {
             User user = new User();
             user.setUin(request.getUin());
