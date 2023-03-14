@@ -12,9 +12,9 @@ public class SwaggerConfiguration {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new io.swagger.v3.oas.models.info.Info()
-                        .title("card-service url: http://176.9.24.125:12565")
+                        .title("payment-service url: http://176.9.24.125:12565")
                         .version("1.0")
-                        .description("Сервис для работы с банковскими карточками ")
+                        .description("Сервис для работы с платежами")
                         .termsOfService("http://swagger.io/terms/"));
     }
 }

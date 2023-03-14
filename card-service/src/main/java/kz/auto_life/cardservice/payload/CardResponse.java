@@ -9,5 +9,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CardResponse {
     private Long cardId;
+    private String name;
     private String lastNumbersOfCard;
+    private int amount;
+    private int month;
+    private int year;
 }

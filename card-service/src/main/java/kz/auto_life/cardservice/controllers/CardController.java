@@ -2,7 +2,7 @@ package kz.auto_life.cardservice.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import kz.auto_life.cardservice.payload.CardRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.auto_life.cardservice.payload.CardResponse;
 import kz.auto_life.cardservice.payload.WithdrawRequest;
 import kz.auto_life.cardservice.services.CardService;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Card API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/cards")
@@ -23,8 +24,8 @@ public class CardController {
             description = "создание банковской карточки для пользователя")
     @ApiResponse(responseCode = "201", description = "OK")
     @PostMapping("/create")
-    public ResponseEntity<CardResponse> createCard(@RequestBody CardRequest request) {
-        return ResponseEntity.status(201).body(cardService.saveUserToCard(request));
+    public ResponseEntity<CardResponse> createCard() {
+        return ResponseEntity.status(201).body(cardService.saveUserToCard());
     }
 
     @Operation(summary = "Оплата через карту",

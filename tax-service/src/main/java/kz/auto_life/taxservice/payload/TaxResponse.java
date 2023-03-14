@@ -15,5 +15,6 @@ public class TaxResponse {
     private String grnz;
     private String vehicleType;
     private BigDecimal amount;
+    private String currency;
     private Boolean paid;
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Tax API")
+@Tag(name = "Payment API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/payments")
@@ -25,7 +25,7 @@ public class PaymentController {
     @Operation(summary = "Оплата налогов",
             description = "оплата налогов через карточку пользователя")
     @ApiResponse(responseCode = "200", description = "OK")
-    @PostMapping
+    @PostMapping("/taxes")
     public List<TaxResponse> pay(@RequestBody WithdrawRequest request) {
         return paymentService.payTaxes(request);
     }

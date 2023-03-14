@@ -17,6 +17,9 @@ public class Tax extends BaseEntity {
     @Column(name = "paid", nullable = false)
     private Boolean paid = false;
 
+    @Column(name = "currency")
+    private String currency;
+
     @Column(name = "amount")
     private BigDecimal amount;
 }

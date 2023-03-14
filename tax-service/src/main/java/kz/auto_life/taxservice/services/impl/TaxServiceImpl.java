@@ -52,15 +52,12 @@ public class TaxServiceImpl implements TaxService {
     }
 
     public BigDecimal getAmount(String vehicleType, String vehicleValue) {
-        switch (vehicleType) {
-            case "CAR":
-                return calculateAmount(valuesOfEngineCapacity, vehicleValue);
-            case "BUS":
-                return calculateAmount(seatsOfBus, vehicleValue);
-            case "FREIGHT":
-                return calculateAmount(valuesOfLoadCapacity, vehicleValue);
-        }
-        return BigDecimal.valueOf(0);
+        return switch (vehicleType) {
+            case "CAR" -> calculateAmount(valuesOfEngineCapacity, vehicleValue);
+            case "BUS" -> calculateAmount(seatsOfBus, vehicleValue);
+            case "FREIGHT" -> calculateAmount(valuesOfLoadCapacity, vehicleValue);
+            default -> BigDecimal.valueOf(0);
+        };
     }
 
     @Override
@@ -79,6 +76,7 @@ public class TaxServiceImpl implements TaxService {
                             tax.setGrnz(v.getGrnz());
                             tax.setType(v.getType());
                             tax.setAmount(getAmount(v.getType(), v.getValue()));
+                            tax.setCurrency("KZT");
                             return tax;
                         }).toList()
         );

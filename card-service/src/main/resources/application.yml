@@ -34,4 +34,3 @@ springdoc:
 
 jwt:
   secret: jdksladklsajdlkasdjlsadkasl
-  expiresAt: 1800000

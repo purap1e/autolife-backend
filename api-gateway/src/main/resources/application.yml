@@ -15,7 +15,7 @@ spring:
         - id: auth
           uri: lb://auth-service
           predicates:
-            - Path=/api/auth/**,/api/v1/test/**,/swagger-ui/**
+            - Path=/api/auth/**,/api/v1/test/**
             - Method=POST,GET
         - id: car
           uri: lb://fine-car-service
@@ -30,12 +30,12 @@ spring:
         - id: card
           uri: lb://card-service
           predicates:
-            - Path=/api/cards/**, /api/transactions
+            - Path=/api/cards/**, /api/transactions/**
             - Method=POST,GET
         - id: payment
           uri: lb://payment-service
           predicates:
-            - Path=/api/payments/**
+            - Path=/api/payments/taxes/**
             - Method=POST,GET
 
 
