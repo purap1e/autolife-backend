@@ -13,20 +13,10 @@ import java.util.Map;
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(GrnzExistsException.class)
     public ResponseEntity<Object> handleUsernameExistsException(GrnzExistsException ex) {
-
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("errorCode", "grnz_exists");
-        body.put("errorDescription", String.format("The grnz '%s' already exists", ex.getGrnz()));
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<Object> UnauthorizedException(UnauthorizedException ex) {
-
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("errorCode", "Unauthorized");
-        body.put("errorDescription", ex.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

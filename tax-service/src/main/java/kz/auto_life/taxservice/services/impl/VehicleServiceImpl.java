@@ -18,7 +18,6 @@ import java.util.List;
 public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
-    private final TaxService taxService;
 
     private boolean grnzExists(String grnz) {
         return vehicleRepository.findByGrnz(grnz) != null;
@@ -27,7 +26,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public Vehicle save(VehicleRequest vehicle) {
         if (grnzExists(vehicle.getGrnz())) {
-            throw new GrnzExistsException(vehicle.getGrnz());
+            throw new GrnzExistsException(String.format("Vehicle with grnz: '%s' already exists", vehicle.getGrnz()));
         } else {
             Vehicle v = new Vehicle();
             v.setUserIin(vehicle.getIin());

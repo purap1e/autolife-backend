@@ -7,6 +7,8 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -34,8 +36,8 @@ public class Card extends BaseEntity {
     private String cvv;
 
     @Column(name = "amount")
-    private int amount;
+    private BigDecimal amount;
 
     @Column(name = "user_id")
-    private Long userId;
+    private UUID userId;
 }

@@ -1,6 +1,6 @@
 package kz.auto_life.authservice.services.impls;
 
-import kz.auto_life.authservice.exceptions.*;
+import kz.auto_life.authservice.exceptions.ExistsException;
 import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.repositories.UserRepository;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 @Service
@@ -35,7 +34,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional
     public User register(UserRegisterRequest request) {
         if (phoneExists(request.getPhone())) {
             throw new ExistsException(String.format("The phone '%s' already exists", request.getPhone()));
