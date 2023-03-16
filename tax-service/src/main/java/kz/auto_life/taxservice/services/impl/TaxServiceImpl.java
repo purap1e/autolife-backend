@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -91,7 +92,7 @@ public class TaxServiceImpl implements TaxService {
                 .toList();
     }
 
-    public Tax getById(Long id) {
+    public Tax getById(UUID id) {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new RuntimeException("Tax not found"));
         tax.setPaid(true);
         return taxRepository.save(tax);

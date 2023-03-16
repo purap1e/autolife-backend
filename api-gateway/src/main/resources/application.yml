@@ -1,7 +1,6 @@
 server:
   port: 12565
 
-# id приложения
 spring:
   application:
     name: api-gateway
@@ -38,7 +37,6 @@ spring:
             - Path=/api/payments/**, /api/accommodations/**
             - Method=POST,GET
 
-# url для регистрации микросервисов
 eureka:
   client:
     service-url:

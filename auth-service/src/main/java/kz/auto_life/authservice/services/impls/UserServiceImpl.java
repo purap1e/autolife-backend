@@ -1,6 +1,6 @@
 package kz.auto_life.authservice.services.impls;
 
-import kz.auto_life.authservice.exceptions.*;
+import kz.auto_life.authservice.exceptions.ExistsException;
 import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.repositories.UserRepository;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 @Service

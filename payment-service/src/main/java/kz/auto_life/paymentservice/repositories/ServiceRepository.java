@@ -4,9 +4,8 @@ import kz.auto_life.paymentservice.models.Accommodation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
+import java.util.UUID;
 
 @Repository
-@Transactional
-public interface ServiceRepository extends JpaRepository<Accommodation, Long> {
+public interface ServiceRepository extends JpaRepository<Accommodation, UUID> {
 }

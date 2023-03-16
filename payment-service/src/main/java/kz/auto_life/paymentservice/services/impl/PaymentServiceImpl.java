@@ -2,7 +2,7 @@ package kz.auto_life.paymentservice.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.auto_life.paymentservice.filters.CustomAuthorizationFilter;
-import kz.auto_life.paymentservice.models.WithdrawRequest;
+import kz.auto_life.paymentservice.payload.WithdrawRequest;
 import kz.auto_life.paymentservice.payload.FineResponse;
 import kz.auto_life.paymentservice.payload.TaxResponse;
 import kz.auto_life.paymentservice.services.PaymentService;
@@ -32,7 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + CustomAuthorizationFilter.token1);
+            headers.set("Authorization", "Bearer " + CustomAuthorizationFilter.token);
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             String json = new ObjectMapper().writeValueAsString(request);
@@ -53,7 +53,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + CustomAuthorizationFilter.token1);
+            headers.set("Authorization", "Bearer " + CustomAuthorizationFilter.token);
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             String json = new ObjectMapper().writeValueAsString(request);

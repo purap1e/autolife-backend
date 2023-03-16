@@ -4,6 +4,7 @@ import kz.auto_life.finecarservice.models.Fine;
 import kz.auto_life.finecarservice.payload.FineResponse;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.function.Function;
 
 @Service
@@ -18,7 +19,7 @@ public class FineResponseMapper implements Function<Fine, FineResponse> {
                 fine.getDescription(),
                 fine.getGrnz(),
                 fine.getVehicleType(),
-                fine.getAmountMci() * MCI,
+                BigDecimal.valueOf((long) fine.getAmountMci() * MCI),
                 fine.getPaid());
     }
 }

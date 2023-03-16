@@ -4,11 +4,10 @@ import kz.auto_life.cardservice.models.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-@Transactional
-public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
     List<Transaction> findAllByUserId(Long userId);
 }

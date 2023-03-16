@@ -18,7 +18,6 @@ import java.util.List;
 public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
-    private final TaxService taxService;
 
     private boolean grnzExists(String grnz) {
         return vehicleRepository.findByGrnz(grnz) != null;

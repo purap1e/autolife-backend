@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class FineServiceImpl implements FineService {
                 .toList();
     }
 
-    public Fine getById(Long id) {
+    public Fine getById(UUID id) {
         Fine fine = fineRepository.findById(id).orElseThrow(() -> new RuntimeException("Tax not found"));
         fine.setPaid(true);
         return fineRepository.save(fine);

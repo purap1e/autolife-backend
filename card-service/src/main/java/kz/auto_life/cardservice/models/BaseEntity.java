@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -25,8 +27,10 @@ import static javax.persistence.GenerationType.IDENTITY;
 public abstract class BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    protected Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "uuid")
+    protected UUID id;
 
     @Column(updatable = false)
     @CreationTimestamp

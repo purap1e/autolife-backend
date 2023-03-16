@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
+
 @Repository
-@Transactional
-public interface TaxRepository extends JpaRepository<Tax, Long> {
+public interface TaxRepository extends JpaRepository<Tax, UUID> {
     List<Tax> findAllByUserIinAndPaid(String iin, Boolean paid);
 }

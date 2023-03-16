@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -22,14 +24,16 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Accommodation {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    protected Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", columnDefinition = "uuid")
+    private UUID id;
 
     @Column(updatable = false)
     @CreationTimestamp
-    protected LocalDateTime createdAt;
+    private LocalDateTime createdAt;
     @UpdateTimestamp
-    protected LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "deleted", nullable = false)
     @JsonIgnore

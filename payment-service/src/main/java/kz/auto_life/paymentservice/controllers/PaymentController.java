@@ -3,7 +3,7 @@ package kz.auto_life.paymentservice.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.auto_life.paymentservice.models.WithdrawRequest;
+import kz.auto_life.paymentservice.payload.WithdrawRequest;
 import kz.auto_life.paymentservice.payload.FineResponse;
 import kz.auto_life.paymentservice.payload.TaxResponse;
 import kz.auto_life.paymentservice.services.PaymentService;

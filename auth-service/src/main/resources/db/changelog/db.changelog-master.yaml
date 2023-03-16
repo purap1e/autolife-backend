@@ -1,21 +1,21 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: 1-7
       author: duman.sabyrbayev
       sqlFile:
         path: db/changelog/sql_scripts/00000000000000_initial.sql
   - changeSet:
-      id: 4
+      id: 4-2
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000001_create_tables.sql
   - changeSet:
-      id: 8
+      id: 8-2
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000002_create_tables.sql
   - changeSet:
-      id: 6
+      id: 6-3
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000003_create_tables.sql
@@ -30,12 +30,12 @@ databaseChangeLog:
       sqlFile:
         path: db/changelog/sql_scripts/00000000000005_alter_columns.sql
   - changeSet:
-      id: 11
+      id: 11-1
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000006_alter_columns.sql
   - changeSet:
-      id: 18
+      id: 18-3
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000007_create_tables.sql
