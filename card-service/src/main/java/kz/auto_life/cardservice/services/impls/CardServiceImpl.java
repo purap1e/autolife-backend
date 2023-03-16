@@ -30,6 +30,7 @@ public class CardServiceImpl implements CardService {
     private static final int MIN_CVV = 99;
     private static final int MAX_CVV = 999;
     private static final int YEAR = 3;
+    private static final String CURRENCY_KZ = "KZT";
     private final CardRepository cardRepository;
     private final TransactionService transactionService;
     private final CardMapper cardMapper;
@@ -41,7 +42,6 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    @Transactional
     public CardResponse saveUserToCard() {
         log.info("Fetching user with id '{}' from the database", CustomAuthorizationFilter.userId);
         log.info("Saving user to card");
@@ -67,7 +67,6 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    @Transactional
     public String withdraw(WithdrawRequest request) {
         Card card = cardRepository.findById(request.getCardId()).orElseThrow(() -> new RuntimeException("card not found"));
         if (Long.parseLong(CustomAuthorizationFilter.userId) == card.getUserId()) {
@@ -80,10 +79,16 @@ public class CardServiceImpl implements CardService {
                 request.getAttributes()
                         .forEach(x -> {
                             Transaction transaction = new Transaction();
-                            transaction.setServiceId(x.getId());
-                            transaction.setServiceType(String.valueOf(ServiceTypes.TAX));
-                            transaction.setServiceDescription(String.format("Tax for vehicle with grnz '%s'", x.getGrnz()));
+                            transaction.setServiceId(request.getServiceId());
+                            transaction.setReferenceId(x.getId());
+                            if (request.getServiceId() == 1) {
+                                transaction.setServiceType(String.valueOf(ServiceTypes.TAX));
+                            } else {
+                                transaction.setServiceType(String.valueOf(ServiceTypes.FINE));
+                            }
+                            transaction.setServiceDescription(String.format("Vehicle with grnz '%s'", x.getGrnz()));
                             transaction.setServiceAmount(x.getAmount());
+                            transaction.setCurrency(CURRENCY_KZ);
                             transaction.setUserId(Long.parseLong(CustomAuthorizationFilter.userId));
                             transactionService.save(transaction);
                         });

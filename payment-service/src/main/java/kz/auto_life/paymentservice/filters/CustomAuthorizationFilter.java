@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kz.auto_life.paymentservice.exceptions.UnauthorizedException;
 import kz.auto_life.paymentservice.properties.JwtProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,8 +39,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            try {
+        try {
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 String token = authorizationHeader.substring("Bearer ".length());
                 token1 = token;
                 Algorithm algorithm = Algorithm.HMAC256(jwtProperties.getSecret().getBytes());
@@ -50,17 +51,23 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
-            } catch (Exception exception) {
-                log.error("Error logging in: {}", exception.getMessage());
-                response.setHeader("error", exception.getMessage());
-                response.setStatus(FORBIDDEN.value());
-                Map<String, String> error = new HashMap<>();
-                error.put("error_message", exception.getMessage());
-                response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), error);
+            } else if (authorizationHeader != null && authorizationHeader.startsWith("Basic ")) {
+                String token = authorizationHeader.substring("Basic ".length());
+                if (!token.equals("YWRtaW46cGFzc3dvcmQ=")) {
+                    throw new UnauthorizedException("Invalid credentials");
+                }
+                filterChain.doFilter(request, response);
+            } else {
+                filterChain.doFilter(request, response);
             }
-        } else {
-            filterChain.doFilter(request, response);
+        } catch (Exception exception) {
+            log.error("Error logging in: {}", exception.getMessage());
+            response.setHeader("error", exception.getMessage());
+            response.setStatus(FORBIDDEN.value());
+            Map<String, String> error = new HashMap<>();
+            error.put("error_message", exception.getMessage());
+            response.setContentType(APPLICATION_JSON_VALUE);
+            new ObjectMapper().writeValue(response.getOutputStream(), error);
         }
     }
 }

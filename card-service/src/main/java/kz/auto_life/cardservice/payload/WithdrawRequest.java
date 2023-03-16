@@ -8,4 +8,5 @@ import java.util.List;
 public class WithdrawRequest {
     private List<WithdrawAttributes> attributes;
     private Long cardId;
+    private Long serviceId;
 }

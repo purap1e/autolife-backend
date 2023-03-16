@@ -29,6 +29,9 @@ public class Transaction {
     @Column(name = "service_id")
     private Long serviceId;
 
+    @Column(name = "reference_id")
+    private Long referenceId;
+
     @Column(name = "service_type")
     private String serviceType;
 
@@ -37,6 +40,9 @@ public class Transaction {
 
     @Column(name = "service_amount")
     private int serviceAmount;
+
+    @Column(name = "currency")
+    private String currency;
 
     @Column(name = "user_id")
     private Long userId;

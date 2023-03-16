@@ -24,7 +24,7 @@ public class TaxController {
     @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping
     public List<TaxResponse> getAllTaxes(@RequestParam String iin,
-                                                         @RequestParam Boolean paid) {
+                                         @RequestParam Boolean paid) {
         return taxService.getAllForUser(iin, paid);
     }
 

@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional
     public User register(UserRegisterRequest request) {
         if (phoneExists(request.getPhone())) {
             throw new ExistsException(String.format("The phone '%s' already exists", request.getPhone()));

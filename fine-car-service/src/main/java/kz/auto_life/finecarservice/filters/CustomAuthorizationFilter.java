@@ -28,6 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtProperties jwtProperties;
+    public static String userId = "";
 
     public CustomAuthorizationFilter(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
@@ -43,6 +44,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(token);
                 String username = decodedJWT.getSubject();
+                userId = username;
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);

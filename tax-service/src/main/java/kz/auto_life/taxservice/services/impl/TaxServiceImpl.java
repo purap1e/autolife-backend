@@ -25,6 +25,7 @@ public class TaxServiceImpl implements TaxService {
     private final TaxRepository taxRepository;
     private final VehicleRepository vehicleRepository;
     private final TaxMapper taxMapper;
+    private static final String CURRENCY_KZ = "KZT";
     private final double defaultEngineCapacity = 1500;
 
     private final double[][] valuesOfEngineCapacity = {{1100, 1}, {1500, 2}, {2000, 3}, {2500, 6}, {3000, 9}, {4000, 15}, {5000, 117}, {0, 200}};
@@ -76,7 +77,7 @@ public class TaxServiceImpl implements TaxService {
                             tax.setGrnz(v.getGrnz());
                             tax.setType(v.getType());
                             tax.setAmount(getAmount(v.getType(), v.getValue()));
-                            tax.setCurrency("KZT");
+                            tax.setCurrency(CURRENCY_KZ);
                             return tax;
                         }).toList()
         );
