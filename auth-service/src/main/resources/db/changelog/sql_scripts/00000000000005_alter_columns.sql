@@ -1,0 +1,1 @@
+ALTER TABLE taxes ADD currency varchar(20);

@@ -1,13 +1,14 @@
 package kz.auto_life.taxservice.services;
 
-import kz.auto_life.taxservice.models.Vehicle;
-import kz.auto_life.taxservice.models.childs.Tax;
+import kz.auto_life.taxservice.models.Tax;
+import kz.auto_life.taxservice.payload.TaxResponse;
+import kz.auto_life.taxservice.payload.WithdrawRequest;
 
 import java.util.List;
 
 public interface TaxService {
     void process();
-    List<Tax> getAllByIinAndStatus(String iin, int status);
+    List<TaxResponse> getAllForUser(String iin, Boolean paid);
 
-    List<Tax> payTaxes(List<Long> ids);
+    List<TaxResponse> updateTaxes(WithdrawRequest request);
 }

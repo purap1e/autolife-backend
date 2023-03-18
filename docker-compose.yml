@@ -51,6 +51,34 @@ services:
     networks:
       - app-network
 
+  card-service:
+    build: ./card-service
+    depends_on:
+      - eureka-server
+      - postgres
+    ports:
+      - "12501:12501"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
+    restart: always
+    networks:
+      - app-network
+
+  payment-service:
+    build: ./payment-service
+    depends_on:
+      - eureka-server
+      - postgres
+    ports:
+      - "12577:12577"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
+    restart: always
+    networks:
+      - app-network
+
   api-gateway:
     build: ./api-gateway
     depends_on:
@@ -58,6 +86,8 @@ services:
       - auth-service
       - fine-car-service
       - tax-service
+      - payment-service
+      - card-service
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
     ports:

@@ -1,7 +1,6 @@
 server:
   port: 12565
 
-# id приложения
 spring:
   application:
     name: api-gateway
@@ -15,21 +14,29 @@ spring:
         - id: auth
           uri: lb://auth-service
           predicates:
-            - Path=/api/auth/**,/api/v1/test,/swagger-ui/**
+            - Path=/api/auth/**,/api/v1/test/**
             - Method=POST,GET
         - id: car
           uri: lb://fine-car-service
           predicates:
-            - Path=/api/fine
-            - Method=GET
+            - Path=/api/fines/**
+            - Method=GET,POST
         - id: vehicle
           uri: lb://tax-service
           predicates:
             - Path=/api/vehicles/**, /api/taxes/**
             - Method=POST,GET
+        - id: card
+          uri: lb://card-service
+          predicates:
+            - Path=/api/cards/**, /api/transactions/**
+            - Method=POST,GET
+        - id: payment
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/payments/**, /api/accommodations/**
+            - Method=POST,GET
 
-
-# url для регистрации микросервисов
 eureka:
   client:
     service-url:

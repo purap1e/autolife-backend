@@ -8,6 +8,7 @@
         <version>2.7.9</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>kz.auto_life</groupId>
     <artifactId>tax-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -70,6 +71,11 @@
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.mapstruct</groupId>-->
+        <!--            <artifactId>mapstruct</artifactId>-->
+        <!--            <version>1.5.3.Final</version>-->
+        <!--        </dependency>-->
     </dependencies>
 
     <dependencyManagement>

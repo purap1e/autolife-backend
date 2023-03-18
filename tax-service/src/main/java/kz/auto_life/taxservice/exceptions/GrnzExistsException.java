@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Getter
 @AllArgsConstructor
 public class GrnzExistsException extends RuntimeException {
-    private String grnz;
+    private String message;
 }

@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableDiscoveryClient
 public class SwaggerConfiguration {
-
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -18,5 +17,4 @@ public class SwaggerConfiguration {
                         .description("Сервис работы с налогами")
                         .termsOfService("http://swagger.io/terms/"));
     }
-
 }

@@ -1,7 +1,10 @@
 package kz.auto_life.taxservice.services.impl;
 
+import kz.auto_life.taxservice.mappers.TaxMapper;
+import kz.auto_life.taxservice.models.Tax;
 import kz.auto_life.taxservice.models.Vehicle;
-import kz.auto_life.taxservice.models.childs.Tax;
+import kz.auto_life.taxservice.payload.TaxResponse;
+import kz.auto_life.taxservice.payload.WithdrawRequest;
 import kz.auto_life.taxservice.repositories.TaxRepository;
 import kz.auto_life.taxservice.repositories.VehicleRepository;
 import kz.auto_life.taxservice.services.TaxService;
@@ -9,61 +12,54 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class TaxServiceImpl implements TaxService {
-    public static final int MCI = 3093;
+    public static final double MCI = 3093;
 
     private final TaxRepository taxRepository;
     private final VehicleRepository vehicleRepository;
+    private final TaxMapper taxMapper;
+    private static final String CURRENCY_KZ = "KZT";
+    private final double defaultEngineCapacity = 1500;
 
-    public int getAmount(String vehicleType, String vehicleValue) {
-        switch (vehicleType) {
-            case "CAR":
-                int engineCapacity = Integer.parseInt(vehicleValue);
-                if (engineCapacity <= 1100) {
-                    return MCI;
-                } else if (engineCapacity <= 1500) {
-                    return MCI * 2;
-                } else if (engineCapacity <= 2000) {
-                    return MCI * 3 + (engineCapacity - 1500) * 7;
-                } else if (engineCapacity <= 2500) {
-                    return MCI * 6 + (engineCapacity - 1500) * 7;
-                } else if (engineCapacity <= 3000) {
-                    return MCI * 9 + (engineCapacity - 1500) * 7;
-                } else if (engineCapacity <= 4000) {
-                    return MCI * 15 + (engineCapacity - 1500) * 7;
-                } else if (engineCapacity <= 5000) {
-                    return MCI * 117 + (engineCapacity - 1500) * 7;
-                } else {
-                    return MCI * 200 + (engineCapacity - 1500) * 7;
-                }
-            case "BUS":
-                int seats = Integer.parseInt(vehicleValue);
-                if (seats <= 12) {
-                    return MCI * 9;
-                } else if (seats <= 25) {
-                    return MCI * 14;
-                } else {
-                    return MCI * 20;
-                }
-            case "FREIGHT":
-                double loadCapacity = Double.parseDouble(vehicleValue);
-                if (loadCapacity <= 1) {
-                    return MCI * 3;
-                } else if (loadCapacity <= 1.5) {
-                    return MCI * 5;
-                } else if (loadCapacity <= 5) {
-                    return MCI * 7;
-                } else {
-                    return MCI * 9;
-                }
+    private final double[][] valuesOfEngineCapacity = {{1100, 1}, {1500, 2}, {2000, 3}, {2500, 6}, {3000, 9}, {4000, 15}, {5000, 117}, {0, 200}};
+    private final double[][] valuesOfLoadCapacity = {{1, 3}, {1.5, 5}, {5, 7}, {0, 9}};
+    private final double[][] seatsOfBus = {{12, 9}, {25, 14}, {0, 20}};
+
+
+    public BigDecimal calculateAmount(double[][] array, String vehicleValue) {
+        double value = Double.parseDouble(vehicleValue);
+        BigDecimal res = new BigDecimal(0);
+        double exceed = 0;
+        if (value > defaultEngineCapacity) {
+            exceed = (value - defaultEngineCapacity) * 7;
         }
-        return 0;
+        for (int i = 0; i < array.length - 1; i++) {
+            if (value <= array[i][0]) {
+                res = BigDecimal.valueOf(array[i][1] * MCI + exceed);
+                break;
+            }
+        }
+        if (!res.equals(new BigDecimal(0))) {
+            return res;
+        }
+        return BigDecimal.valueOf(MCI * array[array.length - 1][1] + exceed);
+    }
+
+    public BigDecimal getAmount(String vehicleType, String vehicleValue) {
+        return switch (vehicleType) {
+            case "CAR" -> calculateAmount(valuesOfEngineCapacity, vehicleValue);
+            case "BUS" -> calculateAmount(seatsOfBus, vehicleValue);
+            case "FREIGHT" -> calculateAmount(valuesOfLoadCapacity, vehicleValue);
+            default -> BigDecimal.valueOf(0);
+        };
     }
 
     @Override
@@ -82,28 +78,31 @@ public class TaxServiceImpl implements TaxService {
                             tax.setGrnz(v.getGrnz());
                             tax.setType(v.getType());
                             tax.setAmount(getAmount(v.getType(), v.getValue()));
+                            tax.setCurrency(CURRENCY_KZ);
                             return tax;
                         }).toList()
         );
     }
 
     @Override
-    public List<Tax> getAllByIinAndStatus(String iin, int status) {
-        return taxRepository.findAllByUserIinAndStatus(iin, status);
+    public List<TaxResponse> getAllForUser(String iin, Boolean paid) {
+        return taxRepository.findAllByUserIinAndPaid(iin, paid)
+                .stream()
+                .map(taxMapper)
+                .toList();
     }
 
-    public Tax getById(Long id) {
+    public Tax getById(UUID id) {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new RuntimeException("Tax not found"));
-        tax.setStatus(2);
+        tax.setPaid(true);
         return taxRepository.save(tax);
     }
 
     @Override
-    public List<Tax> payTaxes(List<Long> ids) {
+    public List<TaxResponse> updateTaxes(WithdrawRequest request) {
         List<Tax> taxes = new ArrayList<>();
-        ids.forEach(id -> {
-            taxes.add(getById(id));
-        });
-        return taxes;
+        request.getAttributes()
+                .forEach(x -> taxes.add(getById(x.getId())));
+        return taxes.stream().map(taxMapper).toList();
     }
 }

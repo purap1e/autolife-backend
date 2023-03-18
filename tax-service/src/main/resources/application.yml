@@ -32,3 +32,5 @@ springdoc:
   swagger-ui:
     path: /swagger-ui/auto-life.html
 
+jwt:
+  secret: jdksladklsajdlkasdjlsadkasl
