@@ -7,6 +7,5 @@ import kz.auto_life.paymentservice.payload.TaxResponse;
 import java.util.List;
 
 public interface PaymentService {
-    List<TaxResponse> payTaxes(WithdrawRequest request);
-    List<FineResponse> payFines(WithdrawRequest request);
+    List<?> pay(WithdrawRequest request);
 }

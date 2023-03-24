@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } else {
             log.info("Phone '{}' found in the database!", phone);
         }
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return "Password has been successfully updated";
     }
