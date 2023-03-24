@@ -1,6 +1,7 @@
 package kz.auto_life.authservice.services.impls;
 
 import kz.auto_life.authservice.exceptions.ExistsException;
+import kz.auto_life.authservice.exceptions.InvalidCredentialsException;
 import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.repositories.UserRepository;
@@ -32,6 +33,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private boolean uinExists(String uin) {
         return userRepository.findByUin(uin) != null;
     }
+    @Override
+    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
+        User user = userRepository.findByPhone(phone);
+        if (user == null) {
+            log.info("Phone '{}' does not exist, please try again", phone);
+            throw new InvalidCredentialsException("Invalid credentials");
+        } else {
+            log.info("Phone '{}' found in the database!", phone);
+        }
+        return new org.springframework.security.core.userdetails.User(user.getPhone(), user.getPassword(), new ArrayList<>());
+    }
 
     @Override
     public User register(UserRegisterRequest request) {
@@ -53,14 +65,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
+    public String updatePassword(String phone, String newPassword) {
         User user = userRepository.findByPhone(phone);
         if (user == null) {
             log.info("Phone '{}' does not exist, please try again", phone);
-            throw new UsernameNotFoundException("User not found in the database");
+            throw new InvalidCredentialsException("Invalid credentials");
         } else {
             log.info("Phone '{}' found in the database!", phone);
         }
-        return new org.springframework.security.core.userdetails.User(user.getPhone(), user.getPassword(), new ArrayList<>());
+        user.setPassword(newPassword);
+        userRepository.save(user);
+        return "Password has been successfully updated";
     }
 }

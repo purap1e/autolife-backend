@@ -60,7 +60,7 @@ public class PaymentServiceImpl implements PaymentService {
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
             ResponseEntity<String> res = restTemplate.exchange(postUrlForWithdraw, HttpMethod.POST, entity, String.class);
             if (Objects.equals(res.getBody(), "success")) {
-                fines = restTemplate.exchange(postUrlForPayFines, HttpMethod.POST, entity, new ParameterizedTypeReference<List<FineResponse>>() {
+                return restTemplate.exchange(postUrlForPayFines, HttpMethod.POST, entity, new ParameterizedTypeReference<List<FineResponse>>() {
                 }).getBody();
             }
             return fines;
