@@ -28,12 +28,4 @@ public class PaymentController {
     public List<?> pay(@RequestBody WithdrawRequest request) {
         return paymentService.pay(request);
     }
-
-    @Operation(summary = "Оплата штрафов",
-            description = "оплата штрафов через карточку пользователя")
-    @ApiResponse(responseCode = "200", description = "OK")
-    @PostMapping("/fines")
-    public List<FineResponse> payFines(@RequestBody WithdrawRequest request) {
-        return paymentService.payFines(request);
-    }
 }
