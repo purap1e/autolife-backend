@@ -14,5 +14,4 @@ public class ShopServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(ShopServiceApplication.class, args);
     }
-
 }
