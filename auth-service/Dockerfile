@@ -4,7 +4,7 @@ ARG directory
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src/
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests && mvn liquibase:clearCheckSums
 FROM openjdk:17-jdk-slim-buster
 ARG JAR_FILE=./auth-service/target/*.jar
 WORKDIR /app
