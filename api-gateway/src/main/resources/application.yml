@@ -14,7 +14,7 @@ spring:
         - id: auth
           uri: lb://auth-service
           predicates:
-            - Path=/api/auth/**,/api/v1/test/**
+            - Path=/api/auth/**,/api/v1/test/**, /api/user/**
             - Method=POST,GET
         - id: car
           uri: lb://fine-car-service

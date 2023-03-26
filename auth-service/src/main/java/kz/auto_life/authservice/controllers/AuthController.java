@@ -33,8 +33,7 @@ public class AuthController {
 
     @Operation(summary = "Аутентификация")
     @PostMapping("/login")
-    public String login(
-    ) {
+    public String login() {
         return "token";
     }
 

@@ -4,8 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.auto_life.paymentservice.payload.WithdrawRequest;
-import kz.auto_life.paymentservice.payload.FineResponse;
-import kz.auto_life.paymentservice.payload.TaxResponse;
 import kz.auto_life.paymentservice.services.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,19 +21,11 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @Operation(summary = "Оплата налогов",
-            description = "оплата налогов через карточку пользователя")
+    @Operation(summary = "Оплата налогов и штрафов",
+            description = "оплата налогов и штрафов через карточку пользователя")
     @ApiResponse(responseCode = "200", description = "OK")
-    @PostMapping("/taxes")
-    public List<TaxResponse> payTaxes(@RequestBody WithdrawRequest request) {
-        return paymentService.payTaxes(request);
-    }
-
-    @Operation(summary = "Оплата штрафов",
-            description = "оплата штрафов через карточку пользователя")
-    @ApiResponse(responseCode = "200", description = "OK")
-    @PostMapping("/fines")
-    public List<FineResponse> payFines(@RequestBody WithdrawRequest request) {
-        return paymentService.payFines(request);
+    @PostMapping
+    public List<?> pay(@RequestBody WithdrawRequest request) {
+        return paymentService.pay(request);
     }
 }
