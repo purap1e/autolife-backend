@@ -120,7 +120,7 @@ services:
     ports:
       - "12534:12534"
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./postgres-data-auto-life:/var/lib/postgresql/data
     restart: always
     networks:
       - app-network
