@@ -1,6 +1,5 @@
 package kz.auto_life.cardservice.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,8 +15,6 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 
 @Getter
@@ -39,6 +36,5 @@ public abstract class BaseEntity implements Serializable {
     protected LocalDateTime updatedAt;
 
     @Column(name = "deleted", nullable = false)
-    @JsonIgnore
     private Boolean deleted = false;
 }

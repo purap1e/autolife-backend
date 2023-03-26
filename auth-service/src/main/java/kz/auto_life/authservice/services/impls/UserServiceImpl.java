@@ -2,7 +2,7 @@ package kz.auto_life.authservice.services.impls;
 
 import kz.auto_life.authservice.exceptions.ExistsException;
 import kz.auto_life.authservice.exceptions.InvalidCredentialsException;
-import kz.auto_life.authservice.modules.User;
+import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.payload.ResponseMessage;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.repositories.UserRepository;
