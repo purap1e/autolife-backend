@@ -18,7 +18,7 @@ services:
       - "12582:12582"
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life_prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
     restart: always
     networks:
       - app-network
@@ -32,7 +32,7 @@ services:
       - postgres
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life_prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
     restart: always
     networks:
       - app-network
@@ -46,7 +46,7 @@ services:
       - "12594:12594"
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life_prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
     restart: always
     networks:
       - app-network
@@ -60,7 +60,7 @@ services:
       - "12501:12501"
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life_prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
     restart: always
     networks:
       - app-network
@@ -74,7 +74,7 @@ services:
       - "12577:12577"
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life_prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
     restart: always
     networks:
       - app-network
@@ -88,7 +88,7 @@ services:
       - "12599:12599"
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life_prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life
     restart: always
     networks:
       - app-network

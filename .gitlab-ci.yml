@@ -68,7 +68,7 @@ publish:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
   script:
     - docker-compose pull
-    - docker-compose up -d
+    - docker-compose up --build
   tags:
     - team5bootcamp
 
