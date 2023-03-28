@@ -2,8 +2,8 @@ package kz.auto_life.cardservice.services.impls;
 
 import kz.auto_life.cardservice.filters.CustomAuthorizationFilter;
 import kz.auto_life.cardservice.mappers.CardMapper;
-import kz.auto_life.cardservice.modules.Card;
-import kz.auto_life.cardservice.modules.Transaction;
+import kz.auto_life.cardservice.models.Card;
+import kz.auto_life.cardservice.models.Transaction;
 import kz.auto_life.cardservice.payload.CardResponse;
 import kz.auto_life.cardservice.payload.WithdrawRequest;
 import kz.auto_life.cardservice.repositories.CardRepository;

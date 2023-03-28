@@ -1,7 +1,7 @@
 package kz.auto_life.cardservice.services.impls;
 
 import kz.auto_life.cardservice.filters.CustomAuthorizationFilter;
-import kz.auto_life.cardservice.modules.Transaction;
+import kz.auto_life.cardservice.models.Transaction;
 import kz.auto_life.cardservice.repositories.TransactionRepository;
 import kz.auto_life.cardservice.services.TransactionService;
 import lombok.RequiredArgsConstructor;

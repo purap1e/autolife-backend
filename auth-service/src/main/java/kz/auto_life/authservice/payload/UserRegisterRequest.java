@@ -1,6 +1,6 @@
 package kz.auto_life.authservice.payload;
 
-import kz.auto_life.authservice.modules.User;
+import kz.auto_life.authservice.models.User;
 import lombok.Getter;
 
 @Getter

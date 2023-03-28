@@ -1,7 +1,7 @@
 package kz.auto_life.authservice.services;
 
 
-import kz.auto_life.authservice.modules.User;
+import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 
 public interface UserService {

@@ -3,7 +3,7 @@ package kz.auto_life.cardservice.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kz.auto_life.cardservice.modules.Transaction;
+import kz.auto_life.cardservice.models.Transaction;
 import kz.auto_life.cardservice.services.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package kz.auto_life.cardservice.modules;
+package kz.auto_life.cardservice.models;
 
 import lombok.Getter;
 import lombok.Setter;
