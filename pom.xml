@@ -24,6 +24,7 @@
         <module>card-service</module>
         <module>payment-service</module>
         <module>shop-service</module>
+        <module>models</module>
     </modules>
 
 </project>

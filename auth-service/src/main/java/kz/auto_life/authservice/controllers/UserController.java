@@ -22,7 +22,7 @@ public class UserController {
             description = "Ендпоинт для смены пароля")
     @ApiResponse(responseCode = "200", description = "OK")
     @PostMapping("/update")
-    public String registerNewUser(@RequestParam String phone,
+    public String updateUserPassword(@RequestParam String phone,
                                   @RequestParam String password) {
         return userService.updatePassword(phone, password);
     }

@@ -1,4 +1,4 @@
-package kz.auto_life.authservice.models;
+package kz.auto_life.authservice.modules;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

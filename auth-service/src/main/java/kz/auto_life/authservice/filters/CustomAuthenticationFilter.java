@@ -44,7 +44,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        kz.auto_life.authservice.models.User user1 = userRepository.findByPhone(user.getUsername());
+        kz.auto_life.authservice.modules.User user1 = userRepository.findByPhone(user.getUsername());
         Algorithm algorithm = Algorithm.HMAC256(jwtProperties.getSecret().getBytes());
         String access_token = JWT.create()
                 .withSubject(String.valueOf(user1.getId()))

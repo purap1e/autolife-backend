@@ -74,9 +74,7 @@ public class TaxServiceImpl implements TaxService {
                         .stream()
                         .map(v -> {
                             Tax tax = new Tax();
-                            tax.setUserIin(v.getUserIin());
-                            tax.setGrnz(v.getGrnz());
-                            tax.setType(v.getType());
+                            tax.setVehicleId(v.getId());
                             tax.setAmount(getAmount(v.getType(), v.getValue()));
                             tax.setCurrency(CURRENCY_KZ);
                             return tax;
@@ -86,7 +84,7 @@ public class TaxServiceImpl implements TaxService {
 
     @Override
     public List<TaxResponse> getAllForUser(String iin, Boolean paid) {
-        return taxRepository.findAllByUserIinAndPaid(iin, paid)
+        return taxRepository.findALlByIInAndPaid(iin, paid)
                 .stream()
                 .map(taxMapper)
                 .toList();

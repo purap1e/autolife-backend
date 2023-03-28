@@ -3,7 +3,9 @@ package kz.auto_life.finecarservice.configs;
 import kz.auto_life.finecarservice.filters.CustomAuthorizationFilter;
 import kz.auto_life.finecarservice.properties.JwtProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,10 +20,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
-                .anyRequest().authenticated();
+        http.authorizeRequests()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic()
+                .and()
+                .csrf().disable()
+                .formLogin().disable();
         http.addFilterBefore(new CustomAuthorizationFilter(jwtProperties), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("admin")
+                .password("{noop}password")
+                .roles("ADMIN");
     }
     @Override
     public void configure(WebSecurity web) {

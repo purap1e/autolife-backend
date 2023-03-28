@@ -1,4 +1,4 @@
-package kz.auto_life.cardservice.models;
+package kz.auto_life.cardservice.modules;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

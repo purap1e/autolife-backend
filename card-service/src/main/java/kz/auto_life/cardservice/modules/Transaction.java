@@ -1,4 +1,4 @@
-package kz.auto_life.cardservice.models;
+package kz.auto_life.cardservice.modules;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +13,6 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Setter

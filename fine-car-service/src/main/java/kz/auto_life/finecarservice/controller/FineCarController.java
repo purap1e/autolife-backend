@@ -3,6 +3,8 @@ package kz.auto_life.finecarservice.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kz.auto_life.finecarservice.models.Fine;
+import kz.auto_life.finecarservice.payload.FineRequest;
 import kz.auto_life.finecarservice.payload.FineResponse;
 import kz.auto_life.finecarservice.payload.WithdrawRequest;
 import kz.auto_life.finecarservice.services.FineService;
@@ -39,5 +41,13 @@ public class FineCarController {
     @PostMapping("/pay")
     public List<FineResponse> payTaxes(@RequestBody WithdrawRequest request) {
         return fineService.update(request);
+    }
+
+    @Operation(summary = "Создание штрафов(доступ только админам)",
+            description = "создание штрафов")
+    @ApiResponse(responseCode = "201", description = "OK")
+    @PostMapping("/create")
+    public Fine payTaxes(@RequestBody FineRequest request) {
+        return fineService.create(request);
     }
 }

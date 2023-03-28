@@ -1,4 +1,4 @@
-package kz.auto_life.shopservice.models;
+package kz.auto_life.finecarservice.models;
 
 import lombok.Getter;
 import lombok.Setter;
