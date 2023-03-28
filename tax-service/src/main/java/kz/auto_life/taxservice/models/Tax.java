@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,4 +23,8 @@ public class Tax extends BaseEntity {
 
     @Column(name = "amount")
     private BigDecimal amount;
+
+    @Column(name = "vehicle_id")
+    private UUID vehicleId;
+
 }

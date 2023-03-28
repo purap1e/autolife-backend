@@ -3,6 +3,7 @@ package kz.auto_life.taxservice.services.impl;
 import kz.auto_life.taxservice.exceptions.GrnzExistsException;
 import kz.auto_life.taxservice.models.Vehicle;
 import kz.auto_life.taxservice.payload.VehicleRequest;
+import kz.auto_life.taxservice.payload.VehicleResponse;
 import kz.auto_life.taxservice.repositories.VehicleRepository;
 import kz.auto_life.taxservice.services.TaxService;
 import kz.auto_life.taxservice.services.VehicleService;
@@ -42,5 +43,10 @@ public class VehicleServiceImpl implements VehicleService {
     public List<Vehicle> getAll() {
         log.info("Fetching all vehicles from the database");
         return vehicleRepository.findAll();
+    }
+
+    @Override
+    public Vehicle get(String grnz) {
+        return vehicleRepository.findByGrnz(grnz);
     }
 }

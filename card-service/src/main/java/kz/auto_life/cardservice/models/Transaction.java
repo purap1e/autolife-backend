@@ -14,8 +14,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 @Getter
 @Setter
 @Entity

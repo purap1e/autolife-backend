@@ -26,17 +26,11 @@ public class Fine {
     @Column(name = "id", columnDefinition = "uuid")
     private UUID id;
 
-    @Column(name = "user_iin")
-    private String userIin;
+    @Column(name = "vehicle_id")
+    private UUID vehicleId;
 
     @Column(name = "fine_description")
     private String description;
-
-    @Column(name = "grnz")
-    private String grnz;
-
-    @Column(name = "vehicle_type")
-    private String vehicleType;
 
     @Column(name = "amount_mci")
     private int amountMci;

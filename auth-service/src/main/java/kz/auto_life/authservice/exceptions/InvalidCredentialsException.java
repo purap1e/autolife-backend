@@ -1,5 +1,6 @@
 package kz.auto_life.authservice.exceptions;
 
+import kz.auto_life.authservice.payload.ResponseMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -9,5 +10,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Getter
 @AllArgsConstructor
 public class InvalidCredentialsException extends RuntimeException {
-    private String message;
+    private ResponseMessage response;
 }

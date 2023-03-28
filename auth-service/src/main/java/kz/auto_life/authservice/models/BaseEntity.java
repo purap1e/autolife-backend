@@ -1,6 +1,5 @@
 package kz.auto_life.authservice.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,7 +27,7 @@ public abstract class BaseEntity implements Serializable {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", columnDefinition = "uuid")
-    private UUID id;
+    protected UUID id;
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -37,6 +36,5 @@ public abstract class BaseEntity implements Serializable {
     protected LocalDateTime updatedAt;
 
     @Column(name = "deleted", nullable = false)
-    @JsonIgnore
     private Boolean deleted = false;
 }

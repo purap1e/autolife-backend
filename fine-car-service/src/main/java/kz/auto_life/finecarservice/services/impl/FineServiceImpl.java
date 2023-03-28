@@ -2,6 +2,7 @@ package kz.auto_life.finecarservice.services.impl;
 
 import kz.auto_life.finecarservice.mappers.FineResponseMapper;
 import kz.auto_life.finecarservice.models.Fine;
+import kz.auto_life.finecarservice.payload.FineRequest;
 import kz.auto_life.finecarservice.payload.FineResponse;
 import kz.auto_life.finecarservice.payload.WithdrawRequest;
 import kz.auto_life.finecarservice.repositories.FineRepository;
@@ -24,7 +25,7 @@ public class FineServiceImpl implements FineService {
     @Override
     public List<FineResponse> getAll(String userIin, Boolean paid) {
         log.info("Fetching all fines by iin");
-        return fineRepository.findAllByUserIinAndPaid(userIin, paid)
+        return fineRepository.findALlByIInAndPaid(userIin, paid)
                 .stream()
                 .map(fineResponseMapper)
                 .toList();
@@ -42,5 +43,15 @@ public class FineServiceImpl implements FineService {
         request.getAttributes()
                 .forEach(x -> fines.add(getById(x.getId())));
         return fines.stream().map(fineResponseMapper).toList();
+    }
+
+    @Override
+    public Fine create(FineRequest request) {
+        Fine fine = new Fine();
+        fine.setVehicleId(request.getVehicleId());
+        fine.setDescription(request.getDescription());
+        fine.setAmountMci(request.getAmountOfMci());
+
+        return fineRepository.save(fine);
     }
 }

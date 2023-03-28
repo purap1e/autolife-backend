@@ -1,13 +1,11 @@
 server:
   port: 12582
-#12582
 
-# id приложения
 spring:
   application:
     name: auth-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/auto_life
+    url: jdbc:postgresql://localhost:5432/auto_life_prod
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -21,7 +19,6 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
-# url для регистрации микросервисов
 eureka:
   client:
     service-url:

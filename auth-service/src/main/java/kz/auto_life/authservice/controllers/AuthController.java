@@ -23,6 +23,7 @@ public class AuthController {
 
     private final UserService userService;
 
+
     @Operation(summary = "Регистрация",
             description = "Ендпоинт для регистрации")
     @ApiResponse(responseCode = "201", description = "OK")

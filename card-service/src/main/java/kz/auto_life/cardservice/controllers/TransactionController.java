@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Tax API")
+@Tag(name = "Transaction API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/transactions")

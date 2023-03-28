@@ -3,6 +3,7 @@ package kz.auto_life.authservice.services.impls;
 import kz.auto_life.authservice.exceptions.ExistsException;
 import kz.auto_life.authservice.exceptions.InvalidCredentialsException;
 import kz.auto_life.authservice.models.User;
+import kz.auto_life.authservice.payload.ResponseMessage;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.repositories.UserRepository;
 import kz.auto_life.authservice.services.UserService;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findByPhone(phone);
         if (user == null) {
             log.info("Phone '{}' does not exist, please try again", phone);
-            throw new InvalidCredentialsException("Invalid credentials");
+            throw new InvalidCredentialsException(new ResponseMessage("Invalid credentials"));
         } else {
             log.info("Phone '{}' found in the database!", phone);
         }
@@ -48,9 +49,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User register(UserRegisterRequest request) {
         if (phoneExists(request.getPhone())) {
-            throw new ExistsException(String.format("The phone '%s' already exists", request.getPhone()));
+            throw new ExistsException(new ResponseMessage(String.format("Phone '%s' already exists", request.getPhone())));
         } else if (uinExists(request.getUin())) {
-            throw new ExistsException(String.format("The uin '%s' already exists", request.getUin()));
+            throw new ExistsException(new ResponseMessage(String.format("Iin '%s' already exists", request.getUin())));
         } else {
             User user = new User();
             user.setUin(request.getUin());
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findByPhone(phone);
         if (user == null) {
             log.info("Phone '{}' does not exist, please try again", phone);
-            throw new InvalidCredentialsException("Invalid credentials");
+            throw new InvalidCredentialsException(new ResponseMessage("Invalid credentials"));
         } else {
             log.info("Phone '{}' found in the database!", phone);
         }
