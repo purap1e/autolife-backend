@@ -9,6 +9,5 @@ import java.util.List;
 public interface TransactionService {
     Transaction save(Transaction transaction);
     List<Transaction> getAll();
-
     List<Transaction> getAllByDate(int days);
 }
