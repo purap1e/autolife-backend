@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableConfigurationProperties({JwtProperties.class})
-@EntityScan("kz.auto_life.cardservice.*")
 public class CardServiceApplication {
 
     public static void main(String[] args) {

@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final static int LENGTH_IIN = 12;
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -54,7 +55,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new ExistsException(new ResponseMessage(String.format("Iin '%s' already exists", request.getUin())));
         } else {
             User user = new User();
-            user.setUin(request.getUin());
+            if(request.getUin().length() != LENGTH_IIN) {
+                throw new InvalidCredentialsException(new ResponseMessage("iin is not correct, please try again!"));
+            } else {
+                user.setUin(request.getUin());
+            }
             user.setFirstName(request.getFirstName());
             user.setMidName(request.getMidName());
             user.setLastName(request.getLastName());
