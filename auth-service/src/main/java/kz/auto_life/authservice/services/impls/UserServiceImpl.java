@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } else {
             User user = new User();
             if(request.getUin().length() != LENGTH_IIN) {
-                throw new InvalidCredentialsException(new ResponseMessage("iin is not correct, please try again"));
+                throw new InvalidCredentialsException(new ResponseMessage("iin is not correct, please try again!"));
             } else {
                 user.setUin(request.getUin());
             }
