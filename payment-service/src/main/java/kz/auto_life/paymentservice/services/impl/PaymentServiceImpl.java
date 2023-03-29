@@ -24,7 +24,7 @@ import java.util.Objects;
 public class PaymentServiceImpl implements PaymentService {
 
     private final ServiceRepository serviceRepository;
-    private final String postUrlForWithdraw = "http://176.9.24.125:12565/api/cards/withdraw";
+    private final String postUrlForWithdraw = "посм/api/cards/withdraw";
     private final String postUrlForPayTaxes = "http://176.9.24.125:12565/api/taxes/pay";
     private final String postUrlForPayFines = "http://176.9.24.125:12565/api/fines/pay";
 

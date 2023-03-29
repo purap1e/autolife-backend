@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Tag(name = "Vehicle API")
 @RestController
 @RequiredArgsConstructor
@@ -44,5 +46,13 @@ public class VehicleController {
     @GetMapping
     public Vehicle get(@RequestParam String grnz) {
         return vehicleService.get(grnz);
+    }
+
+    @Operation(summary = "Вывод всех автомобилей(доступ есть только у админов)",
+            description = "Вывод всех автомобилей")
+    @ApiResponse(responseCode = "200", description = "OK")
+    @GetMapping("/all")
+    public List<Vehicle> get() {
+        return vehicleService.getAll();
     }
 }

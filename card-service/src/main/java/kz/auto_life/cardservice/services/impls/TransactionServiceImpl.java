@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +29,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> getAll() {
         log.info("Fetching all transactions from the database with id '{}'", CustomAuthorizationFilter.userId);
-        return transactionRepository.findAllByUserId(Long.parseLong(CustomAuthorizationFilter.userId));
+        return transactionRepository.findAllByUserId(UUID.fromString(CustomAuthorizationFilter.userId));
+    }
+
+    @Override
+    public List<Transaction> getAllByDate(int days) {
+        log.info("Fetching all transaction by filtering date");
+        LocalDateTime time = LocalDateTime.now().minus(days, ChronoUnit.DAYS);
+        return transactionRepository.findAllByCreatedAtGreaterThan(time);
     }
 }

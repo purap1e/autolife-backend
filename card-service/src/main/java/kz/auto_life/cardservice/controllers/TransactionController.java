@@ -8,6 +8,7 @@ import kz.auto_life.cardservice.services.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,9 +23,17 @@ public class TransactionController {
 
     @Operation(summary = "Вывод всех транзаций",
             description = "список всех транзакий")
-    @ApiResponse(responseCode = "201", description = "OK")
+    @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping
     public List<Transaction> getAll() {
         return transactionService.getAll();
+    }
+
+    @Operation(summary = "Вывод всех транзаций с какого то периода",
+            description = "список всех транзакий с какого то периода")
+    @ApiResponse(responseCode = "200", description = "OK")
+    @GetMapping("/date")
+    public List<Transaction> getAllByFilteringDate(@RequestParam int days) {
+        return transactionService.getAllByDate(days);
     }
 }
