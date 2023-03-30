@@ -1,0 +1,1 @@
+ALTER TABLE items_images RENAME COLUMN image_id to images_id

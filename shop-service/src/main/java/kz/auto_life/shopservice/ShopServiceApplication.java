@@ -10,7 +10,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableConfigurationProperties({JwtProperties.class})
-@EntityScan("kz.auto_life.shopservice.*")
 public class ShopServiceApplication {
 
     public static void main(String[] args) {

@@ -1,0 +1,63 @@
+package kz.auto_life.shopservice.services.impls;
+
+import kz.auto_life.shopservice.mappers.ItemMapper;
+import kz.auto_life.shopservice.models.Image;
+import kz.auto_life.shopservice.models.Item;
+import kz.auto_life.shopservice.payload.ItemDTO;
+import kz.auto_life.shopservice.payload.ItemRequest;
+import kz.auto_life.shopservice.payload.ItemResponse;
+import kz.auto_life.shopservice.repositories.ItemRepository;
+import kz.auto_life.shopservice.services.ItemService;
+import kz.auto_life.shopservice.utils.ImageUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class ItemServiceImpl implements ItemService {
+
+    private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
+
+    @Override
+    public ItemResponse save(int amount, String title, BigDecimal price, List<MultipartFile> images) {
+        log.info("Saving item with images");
+        Item item = new Item();
+        item.setAmount(amount);
+        item.setTitle(title);
+        item.setPrice(price);
+
+        List<Image> files = new ArrayList<>();
+        images.forEach(file -> {
+            try {
+                Image image = new Image();
+                image.setName(file.getOriginalFilename());
+                image.setType(file.getContentType());
+                image.setData(ImageUtils.compressImage(file.getBytes()));
+                files.add(image);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        item.setImages(files);
+        itemRepository.saveAndFlush(item);
+        return new ItemResponse(item.getId());
+    }
+
+    @Override
+    @Transactional
+    public ItemDTO get(ItemRequest request) {
+        log.info("fetching item with id {}", request.getId());
+        return itemRepository.findById(request.getId()).map(itemMapper).orElseThrow(() -> new RuntimeException("item not found"));
+    }
+}
