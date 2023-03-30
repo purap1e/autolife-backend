@@ -64,3 +64,23 @@ databaseChangeLog:
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000012_alter_tables.sql
+  - changeSet:
+      id: 14
+      author: daniyar.bulegenov
+      sqlFile:
+        path: db/changelog/sql_scripts/00000000000013_alter_tables.sql
+  - changeSet:
+      id: 15
+      author: daniyar.bulegenov
+      sqlFile:
+        path: db/changelog/sql_scripts/00000000000014_alter_tables.sql
+  - changeSet:
+      id: 16
+      author: daniyar.bulegenov
+      sqlFile:
+        path: db/changelog/sql_scripts/000000000000015_create_tables.sql
+  - changeSet:
+      id: 17
+      author: daniyar.bulegenov
+      sqlFile:
+        path: db/changelog/sql_scripts/00000000000016_alter_tables.sql

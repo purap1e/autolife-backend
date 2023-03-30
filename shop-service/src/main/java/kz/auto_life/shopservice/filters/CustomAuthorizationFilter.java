@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,9 +29,22 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private final JwtProperties jwtProperties;
+    public static String userId = "";
+    public static String name = "";
+
+    private static final int PIECE_NAME = 2;
+    private static final int SUBSTRING_VALUE = 8;
 
     public CustomAuthorizationFilter(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
+    }
+
+    public String getName(DecodedJWT decodedJWT) {
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String payload = new String(decoder.decode(decodedJWT.getPayload()));
+        String[] pieces = payload.split(",");
+        System.out.println(pieces[PIECE_NAME]);
+        return pieces[PIECE_NAME].substring(SUBSTRING_VALUE, pieces[PIECE_NAME].length() - 1);
     }
 
     @Override
@@ -43,6 +57,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(token);
                 String username = decodedJWT.getSubject();
+                userId = username;
+                name = getName(decodedJWT);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
