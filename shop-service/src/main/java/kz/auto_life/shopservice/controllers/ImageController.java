@@ -29,10 +29,6 @@ public class ImageController {
     @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping("/{id}")
     public ResponseEntity<?> download(@PathVariable UUID id) {
-        Image image = imageService.get(id);
-        byte[] imageData = ImageUtils.decompressImage(image.getData());
-        return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(image.getType()))
-                .body(imageData);
+        return imageService.get(id);
     }
 }

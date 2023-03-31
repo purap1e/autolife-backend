@@ -4,17 +4,18 @@ import kz.auto_life.shopservice.mappers.ItemMapper;
 import kz.auto_life.shopservice.models.Image;
 import kz.auto_life.shopservice.models.Item;
 import kz.auto_life.shopservice.payload.ItemDTO;
-import kz.auto_life.shopservice.payload.ItemRequest;
 import kz.auto_life.shopservice.payload.ItemResponse;
 import kz.auto_life.shopservice.repositories.ItemRepository;
 import kz.auto_life.shopservice.services.ItemService;
 import kz.auto_life.shopservice.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.awt.print.Pageable;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,7 +37,42 @@ public class ItemServiceImpl implements ItemService {
         item.setAmount(amount);
         item.setTitle(title);
         item.setPrice(price);
+        item.setImages(getList(images));
+        itemRepository.saveAndFlush(item);
+        return new ItemResponse(item.getId());
+    }
 
+    @Override
+    @Transactional
+    public ItemDTO get(UUID uuid) {
+        log.info("fetching item with id {}", uuid);
+        return itemRepository.findById(uuid).map(itemMapper).orElseThrow(() -> new RuntimeException("item not found"));
+    }
+
+    @Override
+    @Transactional
+    public List<ItemDTO> getAll(BigDecimal min, BigDecimal max, int page, int size) {
+        log.info("Fetching all items");
+        return itemRepository.findAllByPriceBetween(min, max, PageRequest.of(page, size))
+                .stream()
+                .map(itemMapper).toList();
+    }
+
+    @Override
+    @Transactional
+    public ItemDTO update(UUID id, int newAmount, BigDecimal newPrice, String newTitle, List<MultipartFile> newImages) {
+        log.info("updating item with id {}", id);
+        Item item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("item not found"));
+        item.setAmount(newAmount);
+        item.setPrice(newPrice);
+        item.setTitle(newTitle);
+        item.setImages(getList(newImages));
+        itemRepository.save(item);
+
+        return itemRepository.findById(id).map(itemMapper).orElseThrow(() -> new RuntimeException("item not found"));
+    }
+
+    public List<Image> getList(List<MultipartFile> images) {
         List<Image> files = new ArrayList<>();
         images.forEach(file -> {
             try {
@@ -49,15 +85,6 @@ public class ItemServiceImpl implements ItemService {
                 throw new RuntimeException(e);
             }
         });
-        item.setImages(files);
-        itemRepository.saveAndFlush(item);
-        return new ItemResponse(item.getId());
-    }
-
-    @Override
-    @Transactional
-    public ItemDTO get(ItemRequest request) {
-        log.info("fetching item with id {}", request.getId());
-        return itemRepository.findById(request.getId()).map(itemMapper).orElseThrow(() -> new RuntimeException("item not found"));
+        return files;
     }
 }
