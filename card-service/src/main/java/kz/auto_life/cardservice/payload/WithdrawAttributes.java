@@ -11,5 +11,5 @@ import java.util.UUID;
 public class WithdrawAttributes {
     private UUID id;
     private BigDecimal amount;
-    private String grnz;
+    private String description;
 }

@@ -2,6 +2,7 @@ package kz.auto_life.shopservice.services;
 
 import kz.auto_life.shopservice.payload.ItemDTO;
 import kz.auto_life.shopservice.payload.ItemResponse;
+import kz.auto_life.shopservice.payload.PurchaseAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -12,6 +13,6 @@ public interface ItemService {
     ItemResponse save(int amount, String title, BigDecimal price, List<MultipartFile> images);
     ItemDTO get(UUID uuid);
     List<ItemDTO> getAll(BigDecimal min, BigDecimal max, int page, int size);
-
     ItemDTO update(UUID id, int newAmount, BigDecimal newPrice, String newTitle, List<MultipartFile> newImages);
+    List<ItemDTO> purchase(List<PurchaseAttributes> attributes);
 }

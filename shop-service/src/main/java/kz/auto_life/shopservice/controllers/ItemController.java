@@ -5,13 +5,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kz.auto_life.shopservice.payload.ItemDTO;
 import kz.auto_life.shopservice.payload.ItemResponse;
+import kz.auto_life.shopservice.payload.PurchaseAttributes;
 import kz.auto_life.shopservice.services.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,5 +70,12 @@ public class ItemController {
                           @RequestParam BigDecimal price,
                           @RequestParam List<MultipartFile> images) {
         return itemService.update(id, amount, price, title, images);
+    }
+
+    @Operation(summary = "метод для обновления количества товара",
+            description = "метод для обновления количества товара при покупки")
+    @PostMapping("/purchase")
+    public List<ItemDTO> purchase(@RequestBody List<PurchaseAttributes> attributes) {
+        return itemService.purchase(attributes);
     }
 }

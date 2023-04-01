@@ -1,5 +1,6 @@
 package kz.auto_life.paymentservice.payload;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,9 +8,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class WithdrawAttributes {
+@AllArgsConstructor
+public class PurchaseAttributes {
     private UUID id;
-    private int amount;
-    private String description;
     private int count;
 }

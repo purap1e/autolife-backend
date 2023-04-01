@@ -49,10 +49,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User register(UserRegisterRequest request) {
-        if (phoneExists(request.getPhone())) {
-            throw new ExistsException(new ResponseMessage(String.format("Phone '%s' already exists", request.getPhone())));
-        } else if (uinExists(request.getUin())) {
+        if (uinExists(request.getUin())) {
             throw new ExistsException(new ResponseMessage(String.format("Iin '%s' already exists", request.getUin())));
+        } else if (phoneExists(request.getPhone())) {
+            throw new ExistsException(new ResponseMessage(String.format("Phone '%s' already exists", request.getPhone())));
         } else {
             User user = new User();
             if(request.getUin().length() != LENGTH_IIN) {

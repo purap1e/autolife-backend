@@ -5,6 +5,7 @@ import kz.auto_life.shopservice.models.Image;
 import kz.auto_life.shopservice.models.Item;
 import kz.auto_life.shopservice.payload.ItemDTO;
 import kz.auto_life.shopservice.payload.ItemResponse;
+import kz.auto_life.shopservice.payload.PurchaseAttributes;
 import kz.auto_life.shopservice.repositories.ItemRepository;
 import kz.auto_life.shopservice.services.ItemService;
 import kz.auto_life.shopservice.utils.ImageUtils;
@@ -15,11 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -86,5 +87,25 @@ public class ItemServiceImpl implements ItemService {
             }
         });
         return files;
+    }
+
+    @Override
+    @Transactional
+    public List<ItemDTO> purchase(List<PurchaseAttributes> attributes) {
+        List<Item> items = new ArrayList<>();
+        attributes.forEach(attribute -> {
+            Item item = itemRepository.findById(attribute.getId()).orElseThrow(() -> new RuntimeException("item not found"));
+            item.setAmount(item.getAmount() - attribute.getCount());
+            itemRepository.save(item);
+
+            Item response = new Item();
+            response.setId(item.getId());
+            response.setTitle(item.getTitle());
+            response.setPrice(item.getPrice());
+            response.setAmount(attribute.getCount());
+            response.setImages(item.getImages());
+            items.add(response);
+        });
+        return items.stream().map(itemMapper).toList();
     }
 }

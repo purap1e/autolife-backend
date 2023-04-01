@@ -86,7 +86,7 @@ public class CardServiceImpl implements CardService {
                             Transaction transaction = new Transaction();
                             transaction.setServiceId(request.getServiceId());
                             transaction.setReferenceId(x.getId());
-                            transaction.setServiceDescription(String.format("Vehicle with grnz '%s'", x.getGrnz()));
+                            transaction.setServiceDescription(x.getDescription());
                             transaction.setServiceAmount(x.getAmount());
                             transaction.setCurrency(CURRENCY_KZ);
                             transaction.setUserId(UUID.fromString(CustomAuthorizationFilter.userId));
