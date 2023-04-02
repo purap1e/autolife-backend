@@ -3,6 +3,7 @@ package kz.auto_life.paymentservice.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.auto_life.paymentservice.filters.CustomAuthorizationFilter;
 import kz.auto_life.paymentservice.models.Accommodation;
+import kz.auto_life.paymentservice.payload.PurchaseAttributes;
 import kz.auto_life.paymentservice.payload.WithdrawRequest;
 import kz.auto_life.paymentservice.repositories.ServiceRepository;
 import kz.auto_life.paymentservice.services.PaymentService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,6 +29,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final String postUrlForWithdraw = "http://176.9.24.125:12565/api/cards/withdraw";
     private final String postUrlForPayTaxes = "http://176.9.24.125:12565/api/taxes/pay";
     private final String postUrlForPayFines = "http://176.9.24.125:12565/api/fines/pay";
+    private final String postUrlForPurchaseItems = "http://176.9.24.125:12565/api/shop/items/purchase";
 
     @Override
     public List<?> pay(WithdrawRequest request) {
@@ -48,6 +51,16 @@ public class PaymentServiceImpl implements PaymentService {
                         }).getBody();
                     case "taxes":
                         return restTemplate.exchange(postUrlForPayTaxes, HttpMethod.POST, entity, new ParameterizedTypeReference<List<?>>() {
+                        }).getBody();
+                    case "shop":
+                        List<PurchaseAttributes> attributes = new ArrayList<>();
+                        request.getAttributes()
+                                .forEach(x -> {
+                                    attributes.add(new PurchaseAttributes(x.getId(), x.getCount()));
+                                });
+                        String jsonShop = new ObjectMapper().writeValueAsString(attributes);
+                        HttpEntity<String> entityShop = new HttpEntity<>(jsonShop, headers);
+                        return restTemplate.exchange(postUrlForPurchaseItems, HttpMethod.POST, entityShop, new ParameterizedTypeReference<List<?>>(){
                         }).getBody();
                 }
             }
