@@ -31,7 +31,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private final JwtProperties jwtProperties;
     public static String userId = "";
     public static String name = "";
-
     private static final int PIECE_NAME = 2;
     private static final int SUBSTRING_VALUE = 8;
 
