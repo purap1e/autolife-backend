@@ -74,6 +74,7 @@ databaseChangeLog:
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000014_alter_tables.sql
+<<<<<<< auth-service/src/main/resources/db/changelog/db.changelog-master.yaml
   - changeSet:
       id: 16
       author: daniyar.bulegenov
@@ -84,3 +85,5 @@ databaseChangeLog:
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000016_alter_tables.sql
+=======
+>>>>>>> auth-service/src/main/resources/db/changelog/db.changelog-master.yaml
