@@ -14,7 +14,6 @@ public class TestController {
     public String getTest() {
         return "Добро пожоловать в authservice!!33333333";
     }
-
     @GetMapping("/uuid")
     public UUID generateUUID() {
         return UUID.randomUUID();

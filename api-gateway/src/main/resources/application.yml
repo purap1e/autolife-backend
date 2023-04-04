@@ -39,7 +39,7 @@ spring:
         - id: shop
           uri: lb://shop-service
           predicates:
-            - Path=/api/shop/items/**, /api/shop/images/**
+            - Path=/api/shop/**
             - Method=POST,GET
 
 eureka:

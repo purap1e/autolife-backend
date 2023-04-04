@@ -3,8 +3,10 @@ package kz.auto_life.authservice.services.impls;
 import kz.auto_life.authservice.exceptions.ExistsException;
 import kz.auto_life.authservice.exceptions.InvalidCredentialsException;
 import kz.auto_life.authservice.models.User;
+import kz.auto_life.authservice.mappers.UserMapper;
 import kz.auto_life.authservice.payload.ResponseMessage;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
+import kz.auto_life.authservice.payload.UserRegisterResponse;
 import kz.auto_life.authservice.repositories.UserRepository;
 import kz.auto_life.authservice.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -22,11 +25,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
     private final static int LENGTH_IIN = 12;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     private boolean phoneExists(String phone) {
@@ -82,5 +87,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return "Password has been successfully updated";
+    }
+
+    @Override
+    public UserRegisterResponse get(UUID id) {
+        return userRepository.findById(id).map(userMapper).orElseThrow(() -> new RuntimeException("user not found"));
     }
 }

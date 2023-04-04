@@ -17,6 +17,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,8 +48,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         User user = (User) authentication.getPrincipal();
         kz.auto_life.authservice.models.User user1 = userRepository.findByPhone(user.getUsername());
         Algorithm algorithm = Algorithm.HMAC256(jwtProperties.getSecret().getBytes());
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("name", user1.getFirstName());
         String access_token = JWT.create()
                 .withSubject(String.valueOf(user1.getId()))
+                .withPayload(payload)
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpiresAt()))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
