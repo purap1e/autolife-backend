@@ -2,6 +2,7 @@ package kz.auto_life.authservice.services.impls;
 
 import kz.auto_life.authservice.exceptions.ExistsException;
 import kz.auto_life.authservice.exceptions.InvalidCredentialsException;
+import kz.auto_life.authservice.filters.CustomAuthorizationFilter;
 import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.mappers.UserMapper;
 import kz.auto_life.authservice.payload.ResponseMessage;
@@ -76,14 +77,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public String updatePassword(String phone, String newPassword) {
-        User user = userRepository.findByPhone(phone);
-        if (user == null) {
-            log.info("Phone '{}' does not exist, please try again", phone);
-            throw new InvalidCredentialsException(new ResponseMessage("Invalid credentials"));
-        } else {
-            log.info("Phone '{}' found in the database!", phone);
-        }
+    public String updatePassword(String newPassword) {
+        User user = userRepository.findById(UUID.fromString(CustomAuthorizationFilter.userId)).orElseThrow(() -> new RuntimeException("user not found"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return "Password has been successfully updated";

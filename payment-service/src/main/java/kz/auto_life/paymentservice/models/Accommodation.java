@@ -24,9 +24,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Accommodation {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "uuid")
+    @Column
+    @GeneratedValue
     private UUID id;
 
     @Column(updatable = false)

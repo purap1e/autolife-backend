@@ -9,7 +9,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/test")
 public class TestController {
-
     @GetMapping
     public String getTest() {
         return "Добро пожоловать в authservice!!33333333";

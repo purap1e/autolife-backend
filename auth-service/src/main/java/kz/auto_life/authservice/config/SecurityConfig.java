@@ -1,6 +1,7 @@
 package kz.auto_life.authservice.config;
 
 import kz.auto_life.authservice.filters.CustomAuthenticationFilter;
+import kz.auto_life.authservice.filters.CustomAuthorizationFilter;
 import kz.auto_life.authservice.properties.JwtProperties;
 import kz.auto_life.authservice.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -34,9 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/api/user/update").authenticated()
                 .anyRequest().permitAll();
         http.addFilter(jwtAuthorizationFilter());
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean(), userRepository, jwtProperties));
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtProperties), UsernamePasswordAuthenticationFilter.class);
     }
 
     public CustomAuthenticationFilter jwtAuthorizationFilter() throws Exception {

@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface UserService {
     User register(UserRegisterRequest request);
-    String updatePassword(String phone, String newPassword);
+    String updatePassword(String newPassword);
     UserRegisterResponse get(UUID id);
 }

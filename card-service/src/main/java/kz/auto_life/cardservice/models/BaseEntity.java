@@ -24,9 +24,8 @@ import java.util.UUID;
 public abstract class BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "uuid")
+    @Column
+    @GeneratedValue
     protected UUID id;
 
     @Column(updatable = false)
