@@ -1,9 +1,11 @@
 package kz.auto_life.finecarservice.services.impl;
 
+import kz.auto_life.finecarservice.exceptions.InvalidCredentialsException;
 import kz.auto_life.finecarservice.mappers.FineResponseMapper;
 import kz.auto_life.finecarservice.models.Fine;
 import kz.auto_life.finecarservice.payload.FineRequest;
 import kz.auto_life.finecarservice.payload.FineResponse;
+import kz.auto_life.finecarservice.payload.ResponseMessage;
 import kz.auto_life.finecarservice.payload.WithdrawRequest;
 import kz.auto_life.finecarservice.repositories.FineRepository;
 import kz.auto_life.finecarservice.services.FineService;
@@ -32,7 +34,7 @@ public class FineServiceImpl implements FineService {
     }
 
     public Fine getById(UUID id) {
-        Fine fine = fineRepository.findById(id).orElseThrow(() -> new RuntimeException("Tax not found"));
+        Fine fine = fineRepository.findById(id).orElseThrow(() -> new InvalidCredentialsException(new ResponseMessage("Invalid fine")));
         fine.setPaid(true);
         return fineRepository.save(fine);
     }

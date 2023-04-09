@@ -1,6 +1,5 @@
 package kz.auto_life.cardservice.services.impls;
 
-import kz.auto_life.cardservice.filters.CustomAuthorizationFilter;
 import kz.auto_life.cardservice.models.Transaction;
 import kz.auto_life.cardservice.repositories.TransactionRepository;
 import kz.auto_life.cardservice.services.TransactionService;
@@ -8,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletContext;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -19,6 +19,15 @@ import java.util.UUID;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final ServletContext servletContext;
+
+    public UUID getUserId() {
+        try {
+            return UUID.fromString(String.valueOf(servletContext.getAttribute("userId")));
+        } catch (NullPointerException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public Transaction save(Transaction transaction) {
@@ -28,8 +37,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Transaction> getAll() {
-        log.info("Fetching all transactions from the database with id '{}'", CustomAuthorizationFilter.userId);
-        return transactionRepository.findAllByUserId(UUID.fromString(CustomAuthorizationFilter.userId));
+        log.info("Fetching all transactions from the database with id '{}'", getUserId());
+        return transactionRepository.findAllByUserId(getUserId());
     }
 
     @Override

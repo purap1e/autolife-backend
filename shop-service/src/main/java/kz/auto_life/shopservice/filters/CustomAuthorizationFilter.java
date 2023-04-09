@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,13 +30,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private final JwtProperties jwtProperties;
-    public static String userId = "";
-    public static String name = "";
+    private final ServletContext servletContext;
     private static final int PIECE_NAME = 2;
     private static final int SUBSTRING_VALUE = 8;
 
-    public CustomAuthorizationFilter(JwtProperties jwtProperties) {
+    public CustomAuthorizationFilter(JwtProperties jwtProperties, ServletContext servletContext) {
         this.jwtProperties = jwtProperties;
+        this.servletContext = servletContext;
     }
 
     public String getName(DecodedJWT decodedJWT) {
@@ -55,10 +56,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 Algorithm algorithm = Algorithm.HMAC256(jwtProperties.getSecret().getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(token);
-                String username = decodedJWT.getSubject();
-                userId = username;
-                name = getName(decodedJWT);
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                String userId = decodedJWT.getSubject();
+                servletContext.setAttribute("name", getName(decodedJWT));
+                servletContext.setAttribute("userId", userId);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
             } else if (authorizationHeader != null && authorizationHeader.startsWith("Basic ")) {

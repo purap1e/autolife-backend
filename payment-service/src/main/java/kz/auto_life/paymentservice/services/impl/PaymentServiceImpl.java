@@ -1,7 +1,6 @@
 package kz.auto_life.paymentservice.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kz.auto_life.paymentservice.filters.CustomAuthorizationFilter;
 import kz.auto_life.paymentservice.models.Accommodation;
 import kz.auto_life.paymentservice.payload.PurchaseAttributes;
 import kz.auto_life.paymentservice.payload.WithdrawRequest;
@@ -17,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,17 +26,22 @@ import java.util.Objects;
 public class PaymentServiceImpl implements PaymentService {
 
     private final ServiceRepository serviceRepository;
+    private final ServletContext servletContext;
     private final String postUrlForWithdraw = "http://176.9.24.125:12565/api/cards/withdraw";
     private final String postUrlForPayTaxes = "http://176.9.24.125:12565/api/taxes/pay";
     private final String postUrlForPayFines = "http://176.9.24.125:12565/api/fines/pay";
     private final String postUrlForPurchaseItems = "http://176.9.24.125:12565/api/shop/items/purchase";
+
+    public String getToken() {
+        return String.valueOf(servletContext.getAttribute("token"));
+    }
 
     @Override
     public List<?> pay(WithdrawRequest request) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + CustomAuthorizationFilter.token);
+            headers.set("Authorization", "Bearer " + getToken());
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             String json = new ObjectMapper().writeValueAsString(request);

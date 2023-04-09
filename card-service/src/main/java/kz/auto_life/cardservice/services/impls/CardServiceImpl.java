@@ -1,10 +1,12 @@
 package kz.auto_life.cardservice.services.impls;
 
-import kz.auto_life.cardservice.filters.CustomAuthorizationFilter;
+import kz.auto_life.cardservice.exceptions.AmountException;
+import kz.auto_life.cardservice.exceptions.InvalidCredentialsException;
 import kz.auto_life.cardservice.mappers.CardMapper;
 import kz.auto_life.cardservice.models.Card;
 import kz.auto_life.cardservice.models.Transaction;
 import kz.auto_life.cardservice.payload.CardResponse;
+import kz.auto_life.cardservice.payload.ResponseMessage;
 import kz.auto_life.cardservice.payload.WithdrawRequest;
 import kz.auto_life.cardservice.repositories.CardRepository;
 import kz.auto_life.cardservice.services.CardService;
@@ -12,6 +14,7 @@ import kz.auto_life.cardservice.services.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletContext;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -33,16 +36,26 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final TransactionService transactionService;
     private final CardMapper cardMapper;
+    private final ServletContext servletContext;
 
-    public CardServiceImpl(CardRepository cardRepository, TransactionService transactionService, CardMapper cardMapper) {
+    public CardServiceImpl(CardRepository cardRepository, TransactionService transactionService, CardMapper cardMapper, ServletContext servletContext) {
         this.cardRepository = cardRepository;
         this.transactionService = transactionService;
         this.cardMapper = cardMapper;
+        this.servletContext = servletContext;
+    }
+
+    public UUID getUserId() {
+        try {
+            return UUID.fromString(String.valueOf(servletContext.getAttribute("userId")));
+        } catch (NullPointerException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public CardResponse saveUserToCard() {
-        log.info("Fetching user with id '{}' from the database", CustomAuthorizationFilter.userId);
+        log.info("Fetching user with id '{}' from the database", getUserId());
         log.info("Saving user to card");
 
         Card card = new Card();
@@ -52,7 +65,7 @@ public class CardServiceImpl implements CardService {
         card.setYear(Calendar.getInstance().get(Calendar.YEAR) + YEAR);
         card.setCvv(String.valueOf((int) ((Math.random() * (MAX_CVV - MIN_CVV) + MIN_CVV))));
         card.setAmount((BigDecimal.valueOf(AMOUNT)));
-        card.setUserId(UUID.fromString(CustomAuthorizationFilter.userId));
+        card.setUserId(getUserId());
         cardRepository.save(card);
 
         String lastNumbersOfCard = "************" + card.getCardNumber().substring(15);
@@ -67,8 +80,8 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public String withdraw(WithdrawRequest request) {
-        Card card = cardRepository.findById(request.getCardId()).orElseThrow(() -> new RuntimeException("card not found"));
-        if (UUID.fromString(CustomAuthorizationFilter.userId).equals(card.getUserId())) {
+        Card card = cardRepository.findById(request.getCardId()).orElseThrow(() -> new InvalidCredentialsException(new ResponseMessage("Invalid card")));
+        if (getUserId().equals(card.getUserId())) {
             List<BigDecimal> decimals = new LinkedList<>();
 
             request.getAttributes().forEach(x -> decimals.add(x.getAmount()));
@@ -89,21 +102,24 @@ public class CardServiceImpl implements CardService {
                             transaction.setServiceDescription(x.getDescription());
                             transaction.setServiceAmount(x.getAmount());
                             transaction.setCurrency(CURRENCY_KZ);
-                            transaction.setUserId(UUID.fromString(CustomAuthorizationFilter.userId));
+                            transaction.setUserId(getUserId());
                             transactionService.save(transaction);
                         });
 
                 cardRepository.save(card);
                 return "success";
+            } else {
+                throw new AmountException(new ResponseMessage("Insufficient funds"));
             }
+        } else {
+            throw new InvalidCredentialsException(new ResponseMessage("Invalid card, please try again"));
         }
-        return "error";
     }
 
     @Override
     public List<CardResponse> getAll() {
-        log.info("Fetching all cards of user with id '{}'", CustomAuthorizationFilter.userId);
-        return cardRepository.findAllByUserId(UUID.fromString(CustomAuthorizationFilter.userId))
+        log.info("Fetching all cards of user with id '{}'", getUserId());
+        return cardRepository.findAllByUserId(getUserId())
                 .stream()
                 .map(cardMapper)
                 .toList();

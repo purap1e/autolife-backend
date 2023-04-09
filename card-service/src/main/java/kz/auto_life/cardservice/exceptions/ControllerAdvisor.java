@@ -1,6 +1,6 @@
-package kz.auto_life.taxservice.exceptions;
+package kz.auto_life.cardservice.exceptions;
 
-import kz.auto_life.taxservice.payload.ResponseMessage;
+import kz.auto_life.cardservice.payload.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,14 +9,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(GrnzExistsException.class)
-    public ResponseEntity<Object> handleUsernameExistsException(GrnzExistsException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<Object> UnauthorizedException(UnauthorizedException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    @ExceptionHandler(AmountException.class)
+    public ResponseEntity<ResponseMessage> handleExistsException(AmountException ex) {
+        return new ResponseEntity<>(ex.getResponse(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
