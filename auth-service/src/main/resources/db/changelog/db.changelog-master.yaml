@@ -84,3 +84,8 @@ databaseChangeLog:
       author: daniyar.bulegenov
       sqlFile:
         path: db/changelog/sql_scripts/00000000000016_alter_tables.sql
+  - changeSet:
+      id: 18
+      author: daniyar.bulegenov
+      sqlFile:
+        path: db/changelog/sql_scripts/00000000000017_create_tables.sql

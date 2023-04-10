@@ -1,6 +1,6 @@
-package kz.auto_life.shopservice.exceptions;
+package kz.auto_life.stoservice.exceptions;
 
-import kz.auto_life.shopservice.payload.ResponseMessage;
+import kz.auto_life.stoservice.payload.ResponseMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -1,26 +1,24 @@
-package kz.auto_life.shopservice.filters;
+package kz.auto_life.stoservice.filters;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kz.auto_life.shopservice.exceptions.UnauthorizedException;
-import kz.auto_life.shopservice.payload.ResponseMessage;
-import kz.auto_life.shopservice.properties.JwtProperties;
+import kz.auto_life.stoservice.exceptions.UnauthorizedException;
+import kz.auto_life.stoservice.payload.ResponseMessage;
+import kz.auto_life.stoservice.properties.JwtProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,21 +29,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private final JwtProperties jwtProperties;
-    private final ServletContext servletContext;
-    private static final int PIECE_NAME = 2;
-    private static final int SUBSTRING_VALUE = 8;
 
-    public CustomAuthorizationFilter(JwtProperties jwtProperties, ServletContext servletContext) {
+    public CustomAuthorizationFilter(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
-        this.servletContext = servletContext;
-    }
-
-    public String getName(DecodedJWT decodedJWT) {
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String payload = new String(decoder.decode(decodedJWT.getPayload()));
-        String[] pieces = payload.split(",");
-        System.out.println(pieces[PIECE_NAME]);
-        return pieces[PIECE_NAME].substring(SUBSTRING_VALUE, pieces[PIECE_NAME].length() - 1);
     }
 
     @Override
@@ -58,8 +44,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(token);
                 String userId = decodedJWT.getSubject();
-                servletContext.setAttribute("name", getName(decodedJWT));
-                servletContext.setAttribute("userId", userId);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
