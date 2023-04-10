@@ -2,9 +2,8 @@ package kz.auto_life.authservice.services.impls;
 
 import kz.auto_life.authservice.exceptions.ExistsException;
 import kz.auto_life.authservice.exceptions.InvalidCredentialsException;
-import kz.auto_life.authservice.filters.CustomAuthorizationFilter;
-import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.mappers.UserMapper;
+import kz.auto_life.authservice.models.User;
 import kz.auto_life.authservice.payload.ResponseMessage;
 import kz.auto_life.authservice.payload.UserRegisterRequest;
 import kz.auto_life.authservice.payload.UserRegisterResponse;
@@ -17,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -27,12 +27,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final ServletContext servletContext;
     private final static int LENGTH_IIN = 12;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, ServletContext servletContext) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.servletContext = servletContext;
     }
 
     private boolean phoneExists(String phone) {
@@ -76,9 +78,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
+    public UUID getUserId() {
+        try {
+            return UUID.fromString(String.valueOf(servletContext.getAttribute("userId")));
+        } catch (NullPointerException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public String updatePassword(String newPassword) {
-        User user = userRepository.findById(UUID.fromString(CustomAuthorizationFilter.userId)).orElseThrow(() -> new RuntimeException("user not found"));
+        User user = userRepository.findById(getUserId()).orElseThrow(() -> new RuntimeException("user not found"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return "Password has been successfully updated";

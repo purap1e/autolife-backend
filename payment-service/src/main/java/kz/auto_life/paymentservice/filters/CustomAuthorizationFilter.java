@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,11 +30,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtProperties jwtProperties;
-    public static String token = "";
-    public static String userId = "";
+    private final ServletContext servletContext;
 
-    public CustomAuthorizationFilter(JwtProperties jwtProperties) {
+    public CustomAuthorizationFilter(JwtProperties jwtProperties, ServletContext servletContext) {
         this.jwtProperties = jwtProperties;
+        this.servletContext = servletContext;
     }
 
     @Override
@@ -41,13 +42,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         try {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                token = authorizationHeader.substring("Bearer ".length());
+                String token = authorizationHeader.substring("Bearer ".length());
+                servletContext.setAttribute("token", token);
                 Algorithm algorithm = Algorithm.HMAC256(jwtProperties.getSecret().getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(token);
-                String username = decodedJWT.getSubject();
-                userId = username;
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                String userId = decodedJWT.getSubject();
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
             } else if (authorizationHeader != null && authorizationHeader.startsWith("Basic ")) {

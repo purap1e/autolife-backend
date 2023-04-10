@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.ServletContext;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final JwtProperties jwtProperties;
+    private final ServletContext servletContext;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -40,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll();
         http.addFilter(jwtAuthorizationFilter());
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean(), userRepository, jwtProperties));
-        http.addFilterBefore(new CustomAuthorizationFilter(jwtProperties), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtProperties, servletContext), UsernamePasswordAuthenticationFilter.class);
     }
 
     public CustomAuthenticationFilter jwtAuthorizationFilter() throws Exception {

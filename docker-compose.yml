@@ -93,6 +93,20 @@ services:
     networks:
       - app-network
 
+  sto-service:
+    build: ./sto-service
+    depends_on:
+      - eureka-server
+      - postgres
+    ports:
+      - "12592:12592"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auto_life_prod
+    restart: always
+    networks:
+      - app-network
+
   api-gateway:
     build: ./api-gateway
     depends_on:
@@ -103,6 +117,7 @@ services:
       - payment-service
       - card-service
       - shop-service
+      - sto-service
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:12561/eureka
     ports:

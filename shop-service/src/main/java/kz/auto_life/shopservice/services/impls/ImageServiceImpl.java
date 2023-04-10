@@ -1,6 +1,8 @@
 package kz.auto_life.shopservice.services.impls;
 
+import kz.auto_life.shopservice.exceptions.InvalidCredentialsException;
 import kz.auto_life.shopservice.models.Image;
+import kz.auto_life.shopservice.payload.ResponseMessage;
 import kz.auto_life.shopservice.repositories.ImageRepository;
 import kz.auto_life.shopservice.services.ImageService;
 import kz.auto_life.shopservice.utils.ImageUtils;
@@ -22,7 +24,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ResponseEntity<?> get(UUID id) {
         log.info("fetching image by id");
-        Image image = imageRepository.findById(id).orElseThrow(() -> new RuntimeException("image not found"));
+        Image image = imageRepository.findById(id).orElseThrow(() -> new InvalidCredentialsException(new ResponseMessage("Image not found")));
         byte[] imageData = ImageUtils.decompressImage(image.getData());
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(image.getType()))

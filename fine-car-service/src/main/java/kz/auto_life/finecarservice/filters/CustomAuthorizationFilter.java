@@ -29,7 +29,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtProperties jwtProperties;
-    public static String userId = "";
 
     public CustomAuthorizationFilter(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;

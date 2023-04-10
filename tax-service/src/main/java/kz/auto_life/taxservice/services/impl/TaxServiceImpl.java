@@ -1,8 +1,10 @@
 package kz.auto_life.taxservice.services.impl;
 
+import kz.auto_life.taxservice.exceptions.InvalidCredentialsException;
 import kz.auto_life.taxservice.mappers.TaxMapper;
 import kz.auto_life.taxservice.models.Tax;
 import kz.auto_life.taxservice.models.Vehicle;
+import kz.auto_life.taxservice.payload.ResponseMessage;
 import kz.auto_life.taxservice.payload.TaxResponse;
 import kz.auto_life.taxservice.payload.WithdrawRequest;
 import kz.auto_life.taxservice.repositories.TaxRepository;
@@ -91,7 +93,7 @@ public class TaxServiceImpl implements TaxService {
     }
 
     public Tax getById(UUID id) {
-        Tax tax = taxRepository.findById(id).orElseThrow(() -> new RuntimeException("Tax not found"));
+        Tax tax = taxRepository.findById(id).orElseThrow(() -> new InvalidCredentialsException(new ResponseMessage("Tax not found")));
         tax.setPaid(true);
         return taxRepository.save(tax);
     }

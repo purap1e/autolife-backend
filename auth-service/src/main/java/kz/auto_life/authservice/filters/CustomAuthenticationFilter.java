@@ -2,10 +2,12 @@ package kz.auto_life.authservice.filters;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.auto_life.authservice.properties.JwtProperties;
 import kz.auto_life.authservice.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.CharEncoding;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -60,15 +62,19 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
-        Gson gson = new Gson();
         Map<String, String> map = new HashMap<>();
         map.put("access_token", access_token);
-        String json = gson.toJson(map);
 
-        PrintWriter out = response.getWriter();
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        out.print(json);
-        out.flush();
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(CharEncoding.UTF_8);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(map);
+
+        try (PrintWriter out = response.getWriter()) {
+            out.print(json);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

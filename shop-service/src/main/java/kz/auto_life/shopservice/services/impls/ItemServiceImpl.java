@@ -1,11 +1,13 @@
 package kz.auto_life.shopservice.services.impls;
 
+import kz.auto_life.shopservice.exceptions.InvalidCredentialsException;
 import kz.auto_life.shopservice.mappers.ItemMapper;
 import kz.auto_life.shopservice.models.Image;
 import kz.auto_life.shopservice.models.Item;
 import kz.auto_life.shopservice.payload.ItemDTO;
 import kz.auto_life.shopservice.payload.ItemResponse;
 import kz.auto_life.shopservice.payload.PurchaseAttributes;
+import kz.auto_life.shopservice.payload.ResponseMessage;
 import kz.auto_life.shopservice.repositories.ItemRepository;
 import kz.auto_life.shopservice.services.ItemService;
 import kz.auto_life.shopservice.utils.ImageUtils;
@@ -46,7 +48,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemDTO get(UUID uuid) {
         log.info("fetching item with id {}", uuid);
-        return itemRepository.findById(uuid).map(itemMapper).orElseThrow(() -> new RuntimeException("item not found"));
+        return itemRepository.findById(uuid).map(itemMapper).orElseThrow(() -> new InvalidCredentialsException(new ResponseMessage("Item not found")));
     }
 
     @Override
@@ -62,14 +64,14 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ItemDTO update(UUID id, int newAmount, BigDecimal newPrice, String newTitle, List<MultipartFile> newImages) {
         log.info("updating item with id {}", id);
-        Item item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("item not found"));
+        Item item = itemRepository.findById(id).orElseThrow(() -> new InvalidCredentialsException(new ResponseMessage("Item not found")));
         item.setAmount(newAmount);
         item.setPrice(newPrice);
         item.setTitle(newTitle);
         item.setImages(getList(newImages));
         itemRepository.save(item);
 
-        return itemRepository.findById(id).map(itemMapper).orElseThrow(() -> new RuntimeException("item not found"));
+        return itemRepository.findById(id).map(itemMapper).orElseThrow(() -> new InvalidCredentialsException(new ResponseMessage("Item not found")));
     }
 
     public List<Image> getList(List<MultipartFile> images) {
@@ -93,7 +95,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDTO> purchase(List<PurchaseAttributes> attributes) {
         List<Item> items = new ArrayList<>();
         attributes.forEach(attribute -> {
-            Item item = itemRepository.findById(attribute.getId()).orElseThrow(() -> new RuntimeException("item not found"));
+            Item item = itemRepository.findById(attribute.getId()).orElseThrow(() -> new InvalidCredentialsException(new ResponseMessage("Item not found")));
             item.setAmount(item.getAmount() - attribute.getCount());
             itemRepository.save(item);
 
