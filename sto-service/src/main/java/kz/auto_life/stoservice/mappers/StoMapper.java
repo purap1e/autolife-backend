@@ -17,6 +17,8 @@ public class StoMapper implements Function<Sto, StoDTO> {
                 sto.getPhone(),
                 sto.getDescription(),
                 sto.getLocation(),
+                sto.getCount(),
+                sto.getGrade(),
                 sto.getImages()
                         .stream()
                         .map(image -> ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/api/sto/images/" + image.getId())

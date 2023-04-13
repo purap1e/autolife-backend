@@ -14,5 +14,7 @@ public class StoDTO {
     private String phone;
     private String description;
     private String location;
+    private int countOfComments;
+    private double grade;
     private List<String> imageUrls;
 }

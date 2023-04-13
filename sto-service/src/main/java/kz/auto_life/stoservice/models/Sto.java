@@ -31,10 +31,13 @@ public class Sto extends BaseEntity {
     private int count = 0;
 
     @Column(name = "average_grade")
-    private Double grade = 0.0;
+    private double grade = 0;
 
     @Column(name = "location")
     private String location;
+
+    @Column(name = "grade_sum")
+    private double gradeSum = 0;
 
     @OneToMany(cascade = ALL)
     private List<Image> images = Collections.emptyList();

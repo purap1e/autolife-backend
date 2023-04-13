@@ -45,6 +45,16 @@ public class StoServiceImpl implements StoService {
     }
 
     @Override
+    public void updateGrade(double grade, UUID stoId) {
+        Sto sto = stoRepository.findById(stoId).orElseThrow(() -> new InvalidCredentialsException(new ResponseMessage("sto not found")));
+        sto.setCount(sto.getCount() + 1);
+        sto.setGradeSum(sto.getGradeSum() + grade);
+        double roundOff = Math.round((sto.getGradeSum() / sto.getCount()) * 10.0) / 10.0;
+        sto.setGrade(roundOff);
+        stoRepository.save(sto);
+    }
+
+    @Override
     public UUID save(String title, String phone, String description, String location, List<MultipartFile> images) {
         log.info("Saving sto with images");
         Sto sto = new Sto();
