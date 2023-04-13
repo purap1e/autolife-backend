@@ -41,6 +41,11 @@ spring:
           predicates:
             - Path=/api/shop/**
             - Method=POST,GET
+        - id: sto
+          uri: lb://sto-service
+          predicates:
+            - Path=/api/sto/**
+            - Method=POST,GET
 
 eureka:
   client:

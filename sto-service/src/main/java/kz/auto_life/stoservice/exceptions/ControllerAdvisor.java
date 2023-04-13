@@ -1,6 +1,6 @@
-package kz.auto_life.shopservice.exceptions;
+package kz.auto_life.stoservice.exceptions;
 
-import kz.auto_life.shopservice.payload.ResponseMessage;
+import kz.auto_life.stoservice.payload.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
